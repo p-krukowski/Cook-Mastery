@@ -257,6 +257,7 @@ if (userId && includeCompleted) {
     1. Update RLS policy to allow anonymous reads: `SELECT: true`
     2. Use service role client for this specific query
   - **Recommended**: Update RLS policy to make tutorials publicly readable
+  - **DECISION**: RLS disabled for MVP
 
 ### Input Validation
 - **Strict Validation**: Use Zod schemas to validate all query parameters
@@ -479,27 +480,7 @@ export async function GET(context: APIContext): Promise<Response> {
 2. Add `Cache-Control` header for anonymous requests
 3. Add CORS headers if needed (for cross-origin requests)
 
-### Step 7: Test Endpoint
-
-**Test Cases**:
-1. **Basic Request**: No parameters, should return first page with defaults
-2. **Pagination**: Test various page and limit values
-3. **Level Filter**: Test each difficulty level
-4. **Category Filter**: Test each category
-5. **Sort Options**: Test both `difficulty_asc` and `newest`
-6. **Completion Status**: 
-   - Test authenticated user with `include_completed=true`
-   - Test unauthenticated user
-   - Test authenticated user with `include_completed=false`
-7. **Invalid Parameters**: Test all validation error scenarios
-8. **Edge Cases**:
-   - Empty result set
-   - Last page with fewer items
-   - Page number beyond total pages
-9. **Performance**: Test with large limit (100) and many records
-10. **Security**: Verify anonymous access works
-
-### Step 8: Update Types and Documentation
+### Step 7: Update Types and Documentation
 **Files**: Various
 
 **Tasks**:
@@ -508,7 +489,7 @@ export async function GET(context: APIContext): Promise<Response> {
 3. Add JSDoc comments to service functions
 4. Update this implementation plan if changes made during development
 
-### Step 9: Code Review Checklist
+### Step 8: Code Review Checklist
 **Review**:
 - [ ] All query parameters properly validated
 - [ ] Zod schema includes all validations from spec
@@ -529,27 +510,13 @@ export async function GET(context: APIContext): Promise<Response> {
 - [ ] TypeScript types are properly used throughout
 - [ ] No any types unless absolutely necessary
 
-### Step 10: Integration Testing
-**Activities**:
-1. Test endpoint from frontend application
-2. Verify response format matches frontend expectations
-3. Test with real user authentication flow
-4. Verify completion status displays correctly in UI
-5. Test pagination controls work properly
-6. Monitor query performance in production-like environment
-7. Verify caching works as expected
-
 ---
 
 ## Additional Notes
 
 ### Future Enhancements
 - **Full-text Search**: Add search by title/summary
-- **Advanced Filtering**: Multiple categories, difficulty range
-- **Cursor-based Pagination**: For better performance with large datasets
 - **Response Compression**: Implement gzip compression
-- **Rate Limiting**: Add per-user/IP rate limits
-- **Analytics**: Track popular tutorials, filter combinations
 
 ### Dependencies
 - Supabase client properly configured
