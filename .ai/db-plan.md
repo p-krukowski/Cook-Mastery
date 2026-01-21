@@ -1,5 +1,12 @@
 1. List of tables with their columns, data types, and constraints
 
+   - `auth.users` (managed by Supabase Auth)
+     - `id` uuid PRIMARY KEY
+     - `email` text UNIQUE NOT NULL
+     - `created_at` timestamptz NOT NULL DEFAULT now()
+     - `updated_at` timestamptz NOT NULL DEFAULT now()
+     - Password hash is managed internally by Supabase Auth and is not exposed as a column.
+
    - `public.profiles`
      - `id` uuid PRIMARY KEY REFERENCES `auth.users(id)` ON DELETE CASCADE
      - `username` text NOT NULL UNIQUE
@@ -65,7 +72,7 @@
      - Aggregates `user_tutorials` + `user_articles` against total `tutorials` + `articles` for each level.
 
    - ENUM types
-     - `difficulty_level`: 'BEGGINER', 'INTERMEDIATE', 'EXPERIENCED'
+     - `difficulty_level`: 'BEGINNER', 'INTERMEDIATE', 'EXPERIENCED'
      - `tutorial_category`: 'PRACTICAL', 'THEORETICAL', 'EQUIPMENT'
 
 2. Relationships between tables
