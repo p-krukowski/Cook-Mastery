@@ -40,13 +40,14 @@ export function formatZodError(error: ZodError): ApiErrorResponse {
   const details: Record<string, string> = {};
 
   error.errors.forEach((err) => {
-    const path = err.path.join('.');
+    // Use 'general' as key if path is empty (for refine/superRefine errors)
+    const path = err.path.length > 0 ? err.path.join('.') : 'general';
     details[path] = err.message;
   });
 
   return createErrorResponse(
     'VALIDATION_ERROR',
-    'Invalid query parameters',
+    'Validation failed',
     details
   );
 }
