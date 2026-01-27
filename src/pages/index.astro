@@ -1,8 +1,8 @@
 ---
-import Welcome from "../components/Welcome.astro";
 import Layout from "../layouts/Layout.astro";
+import HomeView from "../components/home/HomeView";
 ---
 
-<Layout>
-  <Welcome />
+<Layout title="Cook Mastery — Home">
+  <HomeView client:load />
 </Layout>
