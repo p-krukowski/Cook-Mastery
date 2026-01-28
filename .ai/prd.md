@@ -79,11 +79,10 @@ FR-003 Session handling
 
 FR-004 Password security baseline
 - Passwords are stored as salted hashes (no plaintext).
-- Basic protections are included (at minimum: input validation and brute-force mitigation such as rate limiting or lockouts).
+- Basic protections are included (at minimum: input validation).
 
 FR-005 Access control
-- Viewing and interacting (marking passed/read, cookbook CRUD, profile editing) requires authentication.
-- Public/anonymous access is not required in MVP.
+- Interacting (marking passed/read, cookbook CRUD, profile editing) requires authentication.
 
 ### 3.2 User profile and level
 FR-006 Level selection and change
@@ -249,7 +248,7 @@ FR-028 Cohort measurement
   Description: As a user, I want to log out so that others can’t access my account on a shared device.
   Acceptance Criteria:
   - Given I am logged in, when I click “Log out”, then my session is invalidated.
-  - After logout, any attempt to access authenticated pages redirects to login.
+  - After logout, any attempt to access authenticated-only pages redirects to login.
 
 - ID: US-004
   Title: Maintain a secure authenticated session
@@ -260,19 +259,12 @@ FR-028 Cohort measurement
   - Session cookies are only sent over HTTPS in production (Secure).
   - Session cookies have an appropriate SameSite policy.
 
-- ID: US-005
-  Title: Protect accounts from brute-force login attempts
-  Description: As a product owner, I want basic abuse protections to reduce account compromise risk.
-  Acceptance Criteria:
-  - When repeated failed login attempts occur from the same source in a short time window, the system slows or blocks further attempts (rate limit/temporary lockout).
-  - The API returns an appropriate error code/message without exposing sensitive details.
-
 - ID: US-006
   Title: Restrict access to authenticated-only features
   Description: As a user, I want only logged-in users to access progress actions and cookbook so my data stays private.
   Acceptance Criteria:
   - When not authenticated, requests to mark a tutorial passed, mark an article read, or manage cookbook entries are rejected.
-  - When not authenticated, navigating to protected pages results in redirect to login.
+  - When not authenticated, navigating to authenticated-only pages results in redirect to login.
 
 ### 5.2 Level selection, profile, and status
 
@@ -311,7 +303,7 @@ FR-028 Cohort measurement
   Title: See recommended tutorials on the home page
   Description: As a user, I want the home page to show tutorials that match my selected level so I know what to learn next.
   Acceptance Criteria:
-  - Given I am logged in, when I open the home page, then I see a grid/list of tutorials filtered by my selected level.
+  - When I open the home page while logged in, I see a grid/list of tutorials filtered by my selected level.
   - Tutorials display at least title, category, and difficulty weight.
 
 - ID: US-012
@@ -356,7 +348,7 @@ FR-028 Cohort measurement
   Title: Browse articles
   Description: As a user, I want to browse articles so I can gain conceptual knowledge.
   Acceptance Criteria:
-  - Given I am logged in, when I open the articles section, then I see a list of articles.
+  - When I open the articles section, I see a list of articles.
   - Articles show at least title, level, and difficulty weight.
 
 - ID: US-018

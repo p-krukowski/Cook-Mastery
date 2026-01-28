@@ -1,0 +1,13 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { AuthFormLogin } from "../components/auth/AuthFormLogin";
+
+// Note: When backend auth is implemented, this page should redirect
+// authenticated users to "/" to avoid showing the login form unnecessarily
+---
+
+<Layout title="Log in — Cook Mastery">
+  <div class="container mx-auto px-4 py-8 md:py-16">
+    <AuthFormLogin client:load />
+  </div>
+</Layout>
