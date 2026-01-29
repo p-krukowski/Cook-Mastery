@@ -2,8 +2,11 @@
 import Layout from "../layouts/Layout.astro";
 import { AuthFormSignup } from "../components/auth/AuthFormSignup";
 
-// Note: When backend auth is implemented, this page should redirect
-// authenticated users to "/" to avoid showing the signup form unnecessarily
+// Redirect authenticated users to home page
+// This is a backup to middleware protection
+if (Astro.locals.user) {
+  return Astro.redirect('/');
+}
 ---
 
 <Layout title="Sign up — Cook Mastery">

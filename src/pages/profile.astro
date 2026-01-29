@@ -1,0 +1,23 @@
+---
+/**
+ * Profile page
+ * Displays user profile information and settings
+ * Allows authenticated users to view their information and log out
+ */
+import Layout from '../layouts/Layout.astro';
+import ProfileView from '../components/profile/ProfileView.tsx';
+
+// Get user and profile from middleware (guaranteed to exist due to auth protection)
+const { user, profile } = Astro.locals;
+
+// If no user or profile, this shouldn't happen due to middleware redirect
+if (!user || !profile) {
+  return Astro.redirect('/login');
+}
+---
+
+<Layout title="Profile — Cook Mastery">
+  <div class="container mx-auto px-4 py-8 md:py-16">
+    <ProfileView user={user} profile={profile} client:load />
+  </div>
+</Layout>

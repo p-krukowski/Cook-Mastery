@@ -339,7 +339,8 @@ export interface SignUpCommand {
 
 /**
  * Response DTO for successful signup
- * Returns user profile and session information
+ * Returns user and profile information
+ * Session is managed via HttpOnly cookies (not exposed to client)
  */
 export interface SignUpResponseDTO {
   user: {
@@ -347,11 +348,6 @@ export interface SignUpResponseDTO {
     email: string;
   };
   profile: ProfileDTO;
-  session: {
-    access_token: string;
-    refresh_token: string;
-    expires_at: number;
-  };
 }
 
 /**
@@ -365,6 +361,7 @@ export interface LoginCommand {
 
 /**
  * Response DTO for successful login
+ * Session is managed via HttpOnly cookies (not exposed to client)
  */
 export interface LoginResponseDTO {
   user: {
@@ -372,11 +369,6 @@ export interface LoginResponseDTO {
     email: string;
   };
   profile: ProfileDTO;
-  session: {
-    access_token: string;
-    refresh_token: string;
-    expires_at: number;
-  };
 }
 
 /**

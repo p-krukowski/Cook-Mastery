@@ -2,7 +2,12 @@
 /**
  * Primary navigation bar for Cook Mastery
  * Shows main navigation links and authentication controls
+ * Displays different navigation based on authentication status
  */
+
+// Get user and profile from middleware-populated locals
+const { user, profile } = Astro.locals;
+const isAuthenticated = !!user && !!profile;
 ---
 
 <nav aria-label="Primary" class="border-b bg-background">
@@ -29,38 +34,65 @@
         >
           Learning
         </a>
-        <a 
-          href="/cookbook" 
-          class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          aria-current={Astro.url.pathname.startsWith("/cookbook") ? "page" : undefined}
-        >
-          Cookbook
-        </a>
-        <a 
-          href="/profile" 
-          class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          aria-current={Astro.url.pathname.startsWith("/profile") ? "page" : undefined}
-        >
-          Profile
-        </a>
+        {/* Only show Cookbook for authenticated users */}
+        {isAuthenticated && (
+          <a 
+            href="/cookbook" 
+            class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            aria-current={Astro.url.pathname.startsWith("/cookbook") ? "page" : undefined}
+          >
+            Cookbook
+          </a>
+        )}
+        {/* Only show Profile for authenticated users */}
+        {isAuthenticated && (
+          <a 
+            href="/profile" 
+            class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            aria-current={Astro.url.pathname.startsWith("/profile") ? "page" : undefined}
+          >
+            Profile
+          </a>
+        )}
       </div>
     </div>
 
     {/* Authentication Controls (right side) */}
     <div class="flex items-center gap-4">
-      {/* TODO: Replace with session-aware logic when auth is implemented */}
-      <a 
-        href="/login" 
-        class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-      >
-        Log in
-      </a>
-      <a 
-        href="/signup" 
-        class="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-      >
-        Sign up
-      </a>
+      {isAuthenticated ? (
+        <>
+          {/* Display username */}
+          <span class="text-sm font-medium text-foreground">
+            {profile.username}
+          </span>
+          
+          {/* Logout form */}
+          <form method="POST" action="/api/auth/logout">
+            <button 
+              type="submit"
+              class="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+            >
+              Log out
+            </button>
+          </form>
+        </>
+      ) : (
+        <>
+          {/* Login and Sign up links for unauthenticated users */}
+          <a 
+            href="/login" 
+            class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Log in
+          </a>
+          <a 
+            href="/signup" 
+            class="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+          >
+            Sign up
+          </a>
+        </>
+      )}
     </div>
   </div>
 </nav>
