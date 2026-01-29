@@ -3,17 +3,13 @@
  * These types are used to manage state and presentation logic
  */
 
-import type { DifficultyLevel, TutorialCategory, ApiErrorResponse } from "../../types";
+import type { DifficultyLevel, ApiErrorResponse } from "../../types";
+import type { ContentCardItemVM } from "../content/content.types";
 
 /**
  * Home view mode - determines which data to fetch and how to display it
  */
 export type HomeViewMode = "anonymous" | "authenticated";
-
-/**
- * Type of content displayed on Home
- */
-export type HomeContentType = "tutorial" | "article";
 
 /**
  * Error information for feed loading failures
@@ -27,28 +23,10 @@ export interface HomeFeedErrorVM {
 
 /**
  * Normalized content item for ContentCard
- * Combines tutorial and article data into a unified structure
+ * Alias for shared ContentCardItemVM to maintain backward compatibility
+ * @deprecated Use ContentCardItemVM from content.types.ts instead
  */
-export interface HomeContentItemVM {
-  type: HomeContentType;
-  id: string;
-  title: string;
-  summary: string;
-  level: DifficultyLevel;
-  difficultyWeight: number; // maps from difficulty_weight
-  createdAt: string; // ISO string
-  href: string; // "/tutorials/:id" | "/articles/:id"
-
-  // tutorial-only
-  category?: TutorialCategory;
-
-  // derived UI flags
-  isNew: boolean;
-
-  // completion (only when authenticated + include_completed=true)
-  isCompleted?: boolean;
-  completedAt?: string | null; // for articles (optional)
-}
+export type HomeContentItemVM = ContentCardItemVM;
 
 /**
  * Complete state for the Home view feeds
@@ -57,8 +35,8 @@ export interface HomeFeedStateVM {
   mode: HomeViewMode;
   selectedLevel?: DifficultyLevel;
 
-  tutorials: HomeContentItemVM[];
-  articles: HomeContentItemVM[];
+  tutorials: ContentCardItemVM[];
+  articles: ContentCardItemVM[];
 
   isLoadingTutorials: boolean;
   isLoadingArticles: boolean;

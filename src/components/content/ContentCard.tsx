@@ -3,11 +3,11 @@
  * Displays content with type badge, title, summary, metadata, and optional completion status
  */
 
-import type { HomeContentItemVM } from "../home/home.types";
+import type { ContentCardItemVM } from "./content.types";
 import { NewBadge } from "./NewBadge";
 
 interface ContentCardProps {
-  item: HomeContentItemVM;
+  item: ContentCardItemVM;
 }
 
 /**

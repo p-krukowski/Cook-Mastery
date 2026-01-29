@@ -1,0 +1,36 @@
+---
+/**
+ * Learning Page - Public browsable view for all content
+ * Allows users to browse tutorials and articles with filtering and pagination
+ * Works for both anonymous and authenticated users
+ */
+
+import Layout from "../layouts/Layout.astro";
+import LearningView from "../components/learning/LearningView";
+
+// Read authenticated context from middleware-populated locals
+const user = Astro.locals.user;
+const profile = Astro.locals.profile;
+
+// Derive props for LearningView
+const isAuthenticated = !!user && !!profile;
+const userSelectedLevel = profile?.selected_level;
+
+// Initialize level filter based on authentication status
+// Authenticated: use user's selected_level
+// Anonymous: use "ALL"
+const initialLevelFilter = isAuthenticated && userSelectedLevel ? userSelectedLevel : "ALL";
+const initialTypeFilter = "all"; // Always default to "all"
+---
+
+<Layout title="Learning — Cook Mastery">
+  <main class="container mx-auto w-full max-w-6xl px-4 py-6">
+    <LearningView
+      client:load
+      isAuthenticated={isAuthenticated}
+      userSelectedLevel={userSelectedLevel}
+      initialLevelFilter={initialLevelFilter}
+      initialTypeFilter={initialTypeFilter}
+    />
+  </main>
+</Layout>
