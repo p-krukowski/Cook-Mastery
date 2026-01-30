@@ -42,7 +42,7 @@ export default function HomeView({ initialMode, selectedLevel }: HomeViewProps) 
       : "Latest cooking knowledge and technique articles";
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-6">
+    <div className="mx-auto w-full max-w-6xl px-4 py-6" suppressHydrationWarning>
       {/* Tutorials Section */}
       <HomeSection
         kind="tutorials"
@@ -55,7 +55,7 @@ export default function HomeView({ initialMode, selectedLevel }: HomeViewProps) 
       />
 
       {/* Articles Section */}
-      <div className="mt-12">
+      <div className="mt-12" suppressHydrationWarning>
         <HomeSection
           kind="articles"
           title={articlesSectionTitle}

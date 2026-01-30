@@ -1,6 +1,10 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { toast } from 'sonner';
 import { Button } from '../ui/button';
-import type { ProfileDTO } from '../../types';
+import { LevelSelector } from '../auth/LevelSelector';
+import { ProgressPanel } from './ProgressPanel';
+import { useUserProgress } from './useUserProgress';
+import type { ProfileDTO, DifficultyLevel, UpdateProfileCommand, ApiErrorResponse } from '../../types';
 
 interface ProfileViewProps {
   user: {
@@ -8,15 +12,114 @@ interface ProfileViewProps {
     email: string;
   };
   profile: ProfileDTO;
+  enableProgress?: boolean;
 }
 
 /**
  * ProfileView component
- * Displays user profile information and logout functionality
+ * Displays user profile information, level settings, and logout functionality
  */
-export default function ProfileView({ user, profile }: ProfileViewProps) {
+export default function ProfileView({ user, profile, enableProgress = true }: ProfileViewProps) {
+  // Logout state
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [logoutError, setLogoutError] = useState<string | null>(null);
+
+  // Level settings state
+  const [savedLevel, setSavedLevel] = useState<DifficultyLevel>(profile.selected_level);
+  const [draftLevel, setDraftLevel] = useState<DifficultyLevel>(profile.selected_level);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  // Derived state
+  const isDirty = draftLevel !== savedLevel;
+
+  // Progress tracking state
+  const {
+    data: progressData,
+    isLoading: isLoadingProgress,
+    error: progressError,
+    retry: retryProgress,
+  } = useUserProgress({ enabled: enableProgress });
+
+  /**
+   * Handle level selection change
+   */
+  const handleLevelChange = useCallback((level: DifficultyLevel) => {
+    setDraftLevel(level);
+    setSaveError(null); // Clear any existing errors
+  }, []);
+
+  /**
+   * Handle save level action
+   * Calls PATCH /api/profile and updates local state on success
+   */
+  const handleSaveLevel = useCallback(async () => {
+    // Guard: should not happen due to disabled state, but defensive check
+    if (!isDirty || isSaving) {
+      return;
+    }
+
+    setSaveError(null);
+    setIsSaving(true);
+
+    try {
+      const command: UpdateProfileCommand = {
+        selected_level: draftLevel,
+      };
+
+      const response = await fetch('/api/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(command),
+      });
+
+      // Handle 401 - session expired
+      if (response.status === 401) {
+        window.location.href = '/login';
+        return;
+      }
+
+      // Handle validation errors (400)
+      if (response.status === 400) {
+        const errorData = (await response.json()) as ApiErrorResponse;
+        
+        // Check for field-specific error
+        if (errorData.error.details?.selected_level) {
+          setSaveError(errorData.error.details.selected_level);
+        } else if (errorData.error.details?.general) {
+          setSaveError(errorData.error.details.general);
+        } else {
+          setSaveError(errorData.error.message);
+        }
+        return;
+      }
+
+      // Handle other client/server errors with toast
+      if (!response.ok) {
+        const errorData = (await response.json()) as ApiErrorResponse;
+        
+        // Rate limit or server errors get toast
+        if (response.status === 429) {
+          toast.error('Too many requests. Please try again in a moment.');
+        } else {
+          toast.error(errorData.error.message || 'Failed to update level');
+        }
+        return;
+      }
+
+      // Success - update local state
+      const updatedProfile = (await response.json()) as ProfileDTO;
+      setSavedLevel(updatedProfile.selected_level);
+      setDraftLevel(updatedProfile.selected_level);
+      setSaveError(null);
+      toast.success('Level updated');
+    } catch (err) {
+      // Network error
+      toast.error("Couldn't update level. Check your connection.");
+    } finally {
+      setIsSaving(false);
+    }
+  }, [draftLevel, isDirty, isSaving]);
 
   /**
    * Handle logout action
@@ -24,7 +127,7 @@ export default function ProfileView({ user, profile }: ProfileViewProps) {
    */
   const handleLogout = useCallback(async () => {
     // Reset error state
-    setError(null);
+    setLogoutError(null);
     setIsLoggingOut(true);
 
     try {
@@ -43,7 +146,7 @@ export default function ProfileView({ user, profile }: ProfileViewProps) {
       // Redirect to login page on successful logout
       window.location.href = '/login';
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      setLogoutError(err instanceof Error ? err.message : 'An unexpected error occurred');
       setIsLoggingOut(false);
     }
   }, []);
@@ -53,14 +156,19 @@ export default function ProfileView({ user, profile }: ProfileViewProps) {
     return level.charAt(0) + level.slice(1).toLowerCase();
   };
 
-  // Format date for display
-  const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
+  // Client-side date formatting state
+  const [formattedDate, setFormattedDate] = useState<string>('');
+
+  // Format date on client-side to avoid hydration mismatch
+  useEffect(() => {
+    setFormattedDate(
+      new Date(profile.created_at).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+    );
+  }, [profile.created_at]);
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -83,14 +191,59 @@ export default function ProfileView({ user, profile }: ProfileViewProps) {
             </div>
 
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Selected Level</p>
-              <p className="text-base">{formatLevel(profile.selected_level)}</p>
+              <p className="text-sm font-medium text-muted-foreground">Current Level</p>
+              <p className="text-base">{formatLevel(savedLevel)}</p>
             </div>
 
             <div>
               <p className="text-sm font-medium text-muted-foreground">Member Since</p>
-              <p className="text-base">{formatDate(profile.created_at)}</p>
+              <p className="text-base">{formattedDate}</p>
             </div>
+          </div>
+        </div>
+
+        {/* Progress Panel */}
+        {enableProgress && (
+          <ProgressPanel
+            isLoading={isLoadingProgress}
+            error={progressError || undefined}
+            progress={progressData || undefined}
+            onRetry={retryProgress}
+          />
+        )}
+
+        {/* Level Settings Card */}
+        <div className="rounded-lg border bg-card p-6 shadow-sm">
+          <h2 className="mb-4 text-xl font-semibold">Learning Level</h2>
+          
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Changing your level will change recommendations on the home page.
+            </p>
+
+            {/* Level Selector */}
+            <LevelSelector
+              value={draftLevel}
+              onChange={handleLevelChange}
+              disabled={isSaving}
+              error={saveError || undefined}
+            />
+
+            {/* Inline error display */}
+            {saveError && (
+              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                {saveError}
+              </div>
+            )}
+
+            {/* Save button */}
+            <Button
+              onClick={handleSaveLevel}
+              disabled={!isDirty || isSaving}
+              className="w-full sm:w-auto"
+            >
+              {isSaving ? 'Saving...' : 'Save level'}
+            </Button>
           </div>
         </div>
 
@@ -103,9 +256,9 @@ export default function ProfileView({ user, profile }: ProfileViewProps) {
               Log out of your account to end your current session.
             </p>
 
-            {error && (
+            {logoutError && (
               <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                {error}
+                {logoutError}
               </div>
             )}
 

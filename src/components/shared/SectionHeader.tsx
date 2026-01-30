@@ -11,7 +11,7 @@ interface SectionHeaderProps {
 
 export function SectionHeader({ id, title, description }: SectionHeaderProps) {
   return (
-    <div className="mb-6">
+    <div className="mb-6" suppressHydrationWarning>
       <h2 id={id} className="text-2xl font-bold tracking-tight text-foreground">
         {title}
       </h2>

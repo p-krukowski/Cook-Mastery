@@ -44,7 +44,7 @@ export function ContentCard({ item }: ContentCardProps) {
           >
             {typeBadge}
           </span>
-          {item.isNew && <NewBadge createdAt={item.createdAt} />}
+          {item.isNew && <NewBadge />}
         </div>
 
         {/* Title */}
