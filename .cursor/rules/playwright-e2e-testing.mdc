@@ -1,0 +1,25 @@
+---
+alwaysApply: false
+---
+# AI Rules for Cook Mastery
+
+Cook Mastery is a web app that helps people learn cooking fundamentals by combining curated tutorials and knowledge articles that explain not only how to do something, but why it works. The product focuses on beginner-to-intermediate learning where users can follow recipes but don’t understand principles such as heat control, ingredient function, technique choice, and equipment usage.
+
+## TESTING
+
+### Guidelines for E2E
+
+#### PLAYWRIGHT
+
+- Initialize configuration only with Chromium/Desktop Chrome browser
+- Use browser contexts for isolating test environments
+- Implement the Page Object Model for maintainable tests
+- Use locators for resilient element selection
+- Leverage API testing for backend validation
+- Implement visual comparison with expect(page).toHaveScreenshot()
+- Use the codegen tool for test recording
+- Leverage trace viewer for debugging test failures
+- Implement test hooks for setup and teardown
+- Use expect assertions with specific matchers
+- Leverage parallel execution for faster test runs
+

@@ -36,6 +36,10 @@ Developer tooling:
 - Prettier (incl. `prettier-plugin-astro`)
 - Husky + lint-staged (pre-commit formatting/lint fixing)
 
+Testing:
+- Unit: **Vitest** (with Testing Library + jsdom)
+- E2E: **Playwright** (Chromium/Desktop Chrome)
+
 ## Getting started locally
 
 ### Prerequisites
@@ -60,7 +64,7 @@ npm install
 npm run dev
 ```
 
-Astro’s dev server typically starts at `http://localhost:4321`.
+Dev server runs at `http://localhost:3000` (configured in `astro.config.mjs`).
 
 ## Available scripts
 
@@ -71,6 +75,15 @@ Astro’s dev server typically starts at `http://localhost:4321`.
 - `npm run lint:fix` — run ESLint and auto-fix issues where possible.
 - `npm run format` — format files with Prettier.
 - `npm run astro` — run the Astro CLI.
+- `npm run test` — run unit tests (one-off).
+- `npm run test:unit` — run unit tests (one-off).
+- `npm run test:unit:watch` — run unit tests in watch mode.
+- `npm run test:unit:ui` — run unit tests with the Vitest UI.
+- `npm run test:unit:coverage` — run unit tests with coverage.
+- `npm run test:e2e:install` — install Playwright Chromium.
+- `npm run test:e2e` — run E2E tests (starts dev server automatically).
+- `npm run test:e2e:ui` — run E2E tests with the Playwright UI.
+- `npm run test:e2e:report` — open the Playwright HTML report.
 
 ## Project scope
 
