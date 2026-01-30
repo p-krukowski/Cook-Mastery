@@ -1,0 +1,17 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import CookbookListView from '@/components/cookbook/CookbookListView';
+
+// Defensive redirect if middleware didn't handle auth
+if (!Astro.locals.user || !Astro.locals.profile) {
+  return Astro.redirect('/login');
+}
+
+const isAuthenticated = true;
+---
+
+<Layout title="Cookbook — Cook Mastery">
+  <main class="container mx-auto w-full max-w-6xl px-4 py-6">
+    <CookbookListView client:load isAuthenticated={isAuthenticated} />
+  </main>
+</Layout>
