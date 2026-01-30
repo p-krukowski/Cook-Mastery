@@ -12,6 +12,7 @@ import type {
   ArticleListItemDTO,
   PaginationMeta,
   GetArticleDetailResponseDTO,
+  CompleteArticleResponseDTO,
 } from "../../types";
 
 /**
@@ -182,5 +183,78 @@ export async function getArticleDetail(
     updated_at: article.updated_at,
     is_completed: !!completionData,
     completed_at: completionData?.completed_at || null,
+  };
+}
+
+/**
+ * Records article completion for a user (idempotent)
+ *
+ * @param supabase - Supabase client instance
+ * @param articleId - UUID of the article to mark as completed
+ * @param userId - UUID of the authenticated user
+ * @returns Promise resolving to completion response DTO
+ * @throws Error if article doesn't exist or database operation fails
+ */
+export async function completeArticle(
+  supabase: SupabaseClient,
+  articleId: string,
+  userId: string
+): Promise<CompleteArticleResponseDTO> {
+  // First, verify that the article exists
+  const { data: article, error: articleError } = await supabase
+    .from("articles")
+    .select("id")
+    .eq("id", articleId)
+    .maybeSingle();
+
+  if (articleError) {
+    throw new Error("Failed to verify article existence");
+  }
+
+  if (!article) {
+    throw new Error("Article not found");
+  }
+
+  // Check if completion record already exists
+  const { data: existingCompletion, error: checkError } = await supabase
+    .from("user_articles")
+    .select("article_id, user_id, completed_at")
+    .eq("user_id", userId)
+    .eq("article_id", articleId)
+    .maybeSingle();
+
+  if (checkError) {
+    throw new Error("Failed to check existing completion status");
+  }
+
+  // If already completed, return existing record with status
+  if (existingCompletion) {
+    return {
+      article_id: existingCompletion.article_id,
+      user_id: existingCompletion.user_id,
+      completed_at: existingCompletion.completed_at,
+      status: "already_completed",
+    };
+  }
+
+  // Insert new completion record
+  const { data: newCompletion, error: insertError } = await supabase
+    .from("user_articles")
+    .insert({
+      user_id: userId,
+      article_id: articleId,
+    })
+    .select("article_id, user_id, completed_at")
+    .single();
+
+  if (insertError || !newCompletion) {
+    throw new Error("Failed to record article completion");
+  }
+
+  return {
+    article_id: newCompletion.article_id,
+    user_id: newCompletion.user_id,
+    completed_at: newCompletion.completed_at,
+    status: "created",
   };
 }

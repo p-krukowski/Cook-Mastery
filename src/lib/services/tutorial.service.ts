@@ -13,6 +13,7 @@ import type {
   PaginationMeta,
   GetTutorialDetailResponseDTO,
   TutorialStep,
+  CompleteTutorialResponseDTO,
 } from "../../types";
 
 /**
@@ -190,5 +191,78 @@ export async function getTutorialDetail(
     updated_at: tutorial.updated_at,
     is_completed: !!completionData,
     completed_at: completionData?.completed_at || null,
+  };
+}
+
+/**
+ * Records tutorial completion for a user (idempotent)
+ *
+ * @param supabase - Supabase client instance
+ * @param tutorialId - UUID of the tutorial to mark as completed
+ * @param userId - UUID of the authenticated user
+ * @returns Promise resolving to completion response DTO
+ * @throws Error if tutorial doesn't exist or database operation fails
+ */
+export async function completeTutorial(
+  supabase: SupabaseClient,
+  tutorialId: string,
+  userId: string
+): Promise<CompleteTutorialResponseDTO> {
+  // First, verify that the tutorial exists
+  const { data: tutorial, error: tutorialError } = await supabase
+    .from("tutorials")
+    .select("id")
+    .eq("id", tutorialId)
+    .maybeSingle();
+
+  if (tutorialError) {
+    throw new Error("Failed to verify tutorial existence");
+  }
+
+  if (!tutorial) {
+    throw new Error("Tutorial not found");
+  }
+
+  // Check if completion record already exists
+  const { data: existingCompletion, error: checkError } = await supabase
+    .from("user_tutorials")
+    .select("tutorial_id, user_id, completed_at")
+    .eq("user_id", userId)
+    .eq("tutorial_id", tutorialId)
+    .maybeSingle();
+
+  if (checkError) {
+    throw new Error("Failed to check existing completion status");
+  }
+
+  // If already completed, return existing record with status
+  if (existingCompletion) {
+    return {
+      tutorial_id: existingCompletion.tutorial_id,
+      user_id: existingCompletion.user_id,
+      completed_at: existingCompletion.completed_at,
+      status: "already_completed",
+    };
+  }
+
+  // Insert new completion record
+  const { data: newCompletion, error: insertError } = await supabase
+    .from("user_tutorials")
+    .insert({
+      user_id: userId,
+      tutorial_id: tutorialId,
+    })
+    .select("tutorial_id, user_id, completed_at")
+    .single();
+
+  if (insertError || !newCompletion) {
+    throw new Error("Failed to record tutorial completion");
+  }
+
+  return {
+    tutorial_id: newCompletion.tutorial_id,
+    user_id: newCompletion.user_id,
+    completed_at: newCompletion.completed_at,
+    status: "created",
   };
 }

@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import Navbar from "../components/nav/Navbar.astro";
+import { ToastHost } from "../components/shared/ToastHost";
 
 interface Props {
   title?: string;
@@ -19,6 +20,7 @@ const { title = "Cook Mastery" } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
+    <ToastHost client:load />
     <div class="flex min-h-screen flex-col">
       <header>
         <Navbar />

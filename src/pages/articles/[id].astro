@@ -1,0 +1,33 @@
+---
+/**
+ * Article Detail Page
+ * Route: /articles/:id
+ * 
+ * Displays full article content with metadata and completion tracking.
+ * Public page - accessible to both authenticated and anonymous users.
+ * Authenticated users can mark articles as read.
+ */
+
+import Layout from "../../layouts/Layout.astro";
+import { ArticleDetailView } from "../../components/article-detail/ArticleDetailView";
+
+// Extract article ID from route params
+const articleId = Astro.params.id ?? "";
+
+// Determine authentication status from middleware context
+const isAuthenticated = !!Astro.locals.user && !!Astro.locals.profile;
+
+// Extract user's selected level if authenticated
+const userSelectedLevel = Astro.locals.profile?.selected_level;
+---
+
+<Layout title="Article — Cook Mastery">
+  <main class="container mx-auto w-full max-w-4xl px-4 py-6">
+    <ArticleDetailView
+      client:load
+      articleId={articleId}
+      isAuthenticated={isAuthenticated}
+      userSelectedLevel={userSelectedLevel}
+    />
+  </main>
+</Layout>
