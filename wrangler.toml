@@ -1,0 +1,15 @@
+name = "cook-mastery"
+compatibility_date = "2026-01-01"
+
+# Node.js compatibility for SSR
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "./dist"
+
+# Note: For Cloudflare Pages deployments, KV namespace bindings and environment 
+# variables should be configured in the Cloudflare Dashboard under:
+# Your Pages Project → Settings → Functions → KV namespace bindings
+# Your Pages Project → Settings → Environment variables
+#
+# The SESSION KV binding is required by @astrojs/cloudflare for session storage.
