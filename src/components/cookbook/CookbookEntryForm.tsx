@@ -35,10 +35,10 @@ export default function CookbookEntryForm({
   };
 
   return (
-    <form noValidate onSubmit={handleSubmit} className="space-y-6">
+    <form noValidate onSubmit={handleSubmit} className="space-y-6" data-test-id="cookbook-entry-form">
       {/* General error */}
       {errors.general && (
-        <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+        <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive" data-test-id="form-general-error">
           {errors.general}
         </div>
       )}
@@ -57,6 +57,7 @@ export default function CookbookEntryForm({
           placeholder="https://example.com/recipe"
           aria-invalid={!!errors.url}
           aria-describedby={errors.url ? 'url-error' : undefined}
+          data-test-id="cookbook-url-input"
         />
         <InlineFieldError error={errors.url} />
       </div>
@@ -75,6 +76,7 @@ export default function CookbookEntryForm({
           placeholder="Recipe name"
           aria-invalid={!!errors.title}
           aria-describedby={errors.title ? 'title-error' : undefined}
+          data-test-id="cookbook-title-input"
         />
         <InlineFieldError error={errors.title} />
       </div>
@@ -92,6 +94,7 @@ export default function CookbookEntryForm({
           className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           aria-invalid={!!errors.notes}
           aria-describedby={errors.notes ? 'notes-error' : undefined}
+          data-test-id="cookbook-notes-textarea"
         />
         <InlineFieldError error={errors.notes} />
       </div>
@@ -102,6 +105,7 @@ export default function CookbookEntryForm({
           type="submit"
           disabled={disabled}
           className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+          data-test-id="cookbook-submit-button"
         >
           {submitLabel}
         </button>
@@ -111,6 +115,7 @@ export default function CookbookEntryForm({
             onClick={onCancel}
             disabled={disabled}
             className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+            data-test-id="cookbook-cancel-button"
           >
             Cancel
           </button>

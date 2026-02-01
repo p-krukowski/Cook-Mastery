@@ -40,6 +40,7 @@ const isAuthenticated = !!user && !!profile;
             href="/cookbook" 
             class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             aria-current={Astro.url.pathname.startsWith("/cookbook") ? "page" : undefined}
+            data-test-id="navbar-cookbook-link"
           >
             Cookbook
           </a>

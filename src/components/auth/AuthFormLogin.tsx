@@ -121,13 +121,14 @@ export function AuthFormLogin() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+        <form onSubmit={handleSubmit} className="space-y-4" noValidate data-test-id="login-form">
           {/* General error message */}
           {errors.general && (
             <div
               className="p-3 rounded-md bg-destructive/10 border border-destructive/20 text-sm text-destructive"
               role="alert"
               aria-live="polite"
+              data-test-id="login-error"
             >
               {errors.general}
             </div>
@@ -149,6 +150,7 @@ export function AuthFormLogin() {
               aria-describedby={
                 errors.identifier ? "identifier-error" : undefined
               }
+              data-test-id="login-identifier-input"
             />
             {errors.identifier && (
               <InlineFieldError
@@ -172,6 +174,7 @@ export function AuthFormLogin() {
               disabled={isSubmitting}
               aria-invalid={!!errors.password}
               aria-describedby={errors.password ? "password-error" : undefined}
+              data-test-id="login-password-input"
             />
             {errors.password && (
               <InlineFieldError error={errors.password} aria-id="password-error" />
@@ -184,6 +187,7 @@ export function AuthFormLogin() {
             className="w-full"
             disabled={isSubmitting}
             aria-busy={isSubmitting}
+            data-test-id="login-submit-button"
           >
             {isSubmitting ? "Logging in..." : "Log in"}
           </Button>

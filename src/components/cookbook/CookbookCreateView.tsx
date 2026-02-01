@@ -139,17 +139,20 @@ export default function CookbookCreateView({ isAuthenticated }: CookbookCreateVi
   };
 
   return (
-    <section className="w-full">
+    <section className="w-full" data-test-id="cookbook-create-view">
       <div className="mb-6">
         <div className="flex items-center gap-2">
           <a
             href="/cookbook"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            data-test-id="cookbook-back-link"
           >
             ← Back to Cookbook
           </a>
         </div>
-        <h2 className="mt-4 text-3xl font-bold tracking-tight">New cookbook entry</h2>
+        <h2 className="mt-4 text-3xl font-bold tracking-tight" data-test-id="cookbook-create-heading">
+          New cookbook entry
+        </h2>
       </div>
 
       {/* Form */}
