@@ -13,13 +13,9 @@ import { ContentSections } from "./ContentSections";
 import { CompletionCallToAction } from "./CompletionCallToAction";
 import type { ArticleDetailViewProps } from "./article-detail.types";
 
-export function ArticleDetailView({
-  articleId,
-  isAuthenticated,
-  userSelectedLevel,
-}: ArticleDetailViewProps) {
+export function ArticleDetailView({ articleId, isAuthenticated }: ArticleDetailViewProps) {
   const headingId = useId();
-  
+
   // Fetch article detail
   const { data, isLoading, error, isNotFound, retry } = useArticleDetail({
     articleId,
@@ -87,10 +83,7 @@ export function ArticleDetailView({
   if (!data) {
     return (
       <section aria-labelledby={headingId}>
-        <FullPageError
-          message="Article data is missing."
-          onRetry={retry}
-        />
+        <FullPageError message="Article data is missing." onRetry={retry} />
       </section>
     );
   }

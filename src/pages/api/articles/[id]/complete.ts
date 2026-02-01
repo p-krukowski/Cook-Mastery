@@ -11,12 +11,7 @@
 import type { APIContext } from "astro";
 import { z } from "zod";
 import { completeArticle } from "../../../../lib/services/article.service";
-import {
-  createErrorResponse,
-  createJsonResponse,
-  formatZodError,
-  logError,
-} from "../../../../lib/utils/error-handler";
+import { createErrorResponse, createJsonResponse, formatZodError, logError } from "../../../../lib/utils/error-handler";
 
 // Disable prerendering for this API route
 export const prerender = false;
@@ -61,10 +56,7 @@ export async function POST(context: APIContext): Promise<Response> {
     } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return createJsonResponse(
-        createErrorResponse("UNAUTHORIZED", "You must be logged in to complete articles"),
-        401
-      );
+      return createJsonResponse(createErrorResponse("UNAUTHORIZED", "You must be logged in to complete articles"), 401);
     }
 
     const userId = user.id;
@@ -87,10 +79,7 @@ export async function POST(context: APIContext): Promise<Response> {
     } catch (serviceError) {
       // Handle service-level errors
       if (serviceError instanceof Error && serviceError.message === "Article not found") {
-        return createJsonResponse(
-          createErrorResponse("NOT_FOUND", "Article not found"),
-          404
-        );
+        return createJsonResponse(createErrorResponse("NOT_FOUND", "Article not found"), 404);
       }
 
       // Re-throw unexpected errors to be caught by outer handler
@@ -104,10 +93,7 @@ export async function POST(context: APIContext): Promise<Response> {
     });
 
     return createJsonResponse(
-      createErrorResponse(
-        "INTERNAL_SERVER_ERROR",
-        "An unexpected error occurred while recording article completion"
-      ),
+      createErrorResponse("INTERNAL_SERVER_ERROR", "An unexpected error occurred while recording article completion"),
       500
     );
   }

@@ -13,13 +13,9 @@ import { ContentSections } from "./ContentSections";
 import { CompletionCallToAction } from "./CompletionCallToAction";
 import type { TutorialDetailViewProps } from "./tutorial-detail.types";
 
-export function TutorialDetailView({
-  tutorialId,
-  isAuthenticated,
-  userSelectedLevel,
-}: TutorialDetailViewProps) {
+export function TutorialDetailView({ tutorialId, isAuthenticated }: TutorialDetailViewProps) {
   const headingId = useId();
-  
+
   // Fetch tutorial detail
   const { data, isLoading, error, isNotFound, retry } = useTutorialDetail({
     tutorialId,
@@ -87,10 +83,7 @@ export function TutorialDetailView({
   if (!data) {
     return (
       <section aria-labelledby={headingId}>
-        <FullPageError
-          message="Tutorial data is missing."
-          onRetry={retry}
-        />
+        <FullPageError message="Tutorial data is missing." onRetry={retry} />
       </section>
     );
   }

@@ -1,26 +1,26 @@
 /**
  * Data Transfer Objects (DTOs) and Command Models for Cook Mastery API
- * 
+ *
  * This file contains all type definitions for API requests and responses.
  * All types are derived from database entity definitions in database.types.ts
  */
 
-import type { Tables, TablesInsert, TablesUpdate, Enums } from './db/database.types';
+import type { Tables, TablesInsert, TablesUpdate, Enums } from "./db/database.types";
 
 // ============================================================================
 // Base Entity Types (Re-exported from database types)
 // ============================================================================
 
-export type ArticleEntity = Tables<'articles'>;
-export type TutorialEntity = Tables<'tutorials'>;
-export type ProfileEntity = Tables<'profiles'>;
-export type CookbookEntryEntity = Tables<'cookbook_entries'>;
-export type UserArticleEntity = Tables<'user_articles'>;
-export type UserTutorialEntity = Tables<'user_tutorials'>;
-export type UserLevelProgressEntity = Tables<'user_level_progress'>;
+export type ArticleEntity = Tables<"articles">;
+export type TutorialEntity = Tables<"tutorials">;
+export type ProfileEntity = Tables<"profiles">;
+export type CookbookEntryEntity = Tables<"cookbook_entries">;
+export type UserArticleEntity = Tables<"user_articles">;
+export type UserTutorialEntity = Tables<"user_tutorials">;
+export type UserLevelProgressEntity = Tables<"user_level_progress">;
 
-export type DifficultyLevel = Enums<'difficulty_level'>;
-export type TutorialCategory = Enums<'tutorial_category'>;
+export type DifficultyLevel = Enums<"difficulty_level">;
+export type TutorialCategory = Enums<"tutorial_category">;
 
 // ============================================================================
 // Tutorial Step Type
@@ -67,10 +67,7 @@ export interface PaginationParams {
  * Includes completion status when user is authenticated
  */
 export interface TutorialListItemDTO
-  extends Pick<
-    TutorialEntity,
-    'id' | 'title' | 'category' | 'level' | 'difficulty_weight' | 'summary' | 'created_at'
-  > {
+  extends Pick<TutorialEntity, "id" | "title" | "category" | "level" | "difficulty_weight" | "summary" | "created_at"> {
   is_completed: boolean;
 }
 
@@ -81,17 +78,17 @@ export interface TutorialListItemDTO
 export interface TutorialDetailDTO
   extends Pick<
     TutorialEntity,
-    | 'id'
-    | 'title'
-    | 'category'
-    | 'level'
-    | 'difficulty_weight'
-    | 'summary'
-    | 'content'
-    | 'practice_recommendations'
-    | 'key_takeaways'
-    | 'created_at'
-    | 'updated_at'
+    | "id"
+    | "title"
+    | "category"
+    | "level"
+    | "difficulty_weight"
+    | "summary"
+    | "content"
+    | "practice_recommendations"
+    | "key_takeaways"
+    | "created_at"
+    | "updated_at"
   > {
   steps: TutorialStep[];
   is_completed: boolean;
@@ -104,7 +101,7 @@ export interface TutorialDetailDTO
 export interface ListTutorialsParams extends PaginationParams {
   level?: DifficultyLevel;
   category?: TutorialCategory;
-  sort?: 'difficulty_asc' | 'newest';
+  sort?: "difficulty_asc" | "newest";
   include_completed?: boolean;
 }
 
@@ -130,10 +127,7 @@ export type GetTutorialDetailResponseDTO = TutorialDetailDTO;
  * Includes completion status when user is authenticated
  */
 export interface ArticleListItemDTO
-  extends Pick<
-    ArticleEntity,
-    'id' | 'title' | 'level' | 'difficulty_weight' | 'summary' | 'created_at'
-  > {
+  extends Pick<ArticleEntity, "id" | "title" | "level" | "difficulty_weight" | "summary" | "created_at"> {
   is_completed: boolean;
   completed_at: string | null;
 }
@@ -145,15 +139,15 @@ export interface ArticleListItemDTO
 export interface ArticleDetailDTO
   extends Pick<
     ArticleEntity,
-    | 'id'
-    | 'title'
-    | 'level'
-    | 'difficulty_weight'
-    | 'summary'
-    | 'content'
-    | 'key_takeaways'
-    | 'created_at'
-    | 'updated_at'
+    | "id"
+    | "title"
+    | "level"
+    | "difficulty_weight"
+    | "summary"
+    | "content"
+    | "key_takeaways"
+    | "created_at"
+    | "updated_at"
   > {
   is_completed: boolean;
   completed_at: string | null;
@@ -164,7 +158,7 @@ export interface ArticleDetailDTO
  */
 export interface ListArticlesParams extends PaginationParams {
   level?: DifficultyLevel;
-  sort?: 'difficulty_asc' | 'newest';
+  sort?: "difficulty_asc" | "newest";
   include_completed?: boolean;
 }
 
@@ -191,14 +185,14 @@ export type GetArticleDetailResponseDTO = ArticleDetailDTO;
  */
 export type CookbookEntryDTO = Pick<
   CookbookEntryEntity,
-  'id' | 'user_id' | 'url' | 'title' | 'notes' | 'created_at' | 'updated_at'
+  "id" | "user_id" | "url" | "title" | "notes" | "created_at" | "updated_at"
 >;
 
 /**
  * Query parameters for GET /api/cookbook
  */
 export interface ListCookbookEntriesParams extends PaginationParams {
-  sort?: 'newest' | 'oldest' | 'title_asc';
+  sort?: "newest" | "oldest" | "title_asc";
 }
 
 /**
@@ -218,15 +212,14 @@ export type GetCookbookEntryResponseDTO = CookbookEntryDTO;
  * Command model for POST /api/cookbook
  * Creates a new cookbook entry for the authenticated user
  */
-export interface CreateCookbookEntryCommand
-  extends Pick<TablesInsert<'cookbook_entries'>, 'url' | 'title' | 'notes'> {}
+export interface CreateCookbookEntryCommand extends Pick<TablesInsert<"cookbook_entries">, "url" | "title" | "notes"> {}
 
 /**
  * Command model for PATCH /api/cookbook/:id
  * Updates an existing cookbook entry (all fields optional)
  */
 export interface UpdateCookbookEntryCommand
-  extends Partial<Pick<TablesUpdate<'cookbook_entries'>, 'url' | 'title' | 'notes'>> {}
+  extends Partial<Pick<TablesUpdate<"cookbook_entries">, "url" | "title" | "notes">> {}
 
 /**
  * Response DTO for POST /api/cookbook
@@ -252,17 +245,13 @@ export interface DeleteCookbookEntryResponseDTO {
 /**
  * Profile DTO - represents user profile information
  */
-export type ProfileDTO = Pick<
-  ProfileEntity,
-  'id' | 'username' | 'selected_level' | 'created_at' | 'updated_at'
->;
+export type ProfileDTO = Pick<ProfileEntity, "id" | "username" | "selected_level" | "created_at" | "updated_at">;
 
 /**
  * Command model for updating user profile
  * All fields are optional to support partial updates
  */
-export interface UpdateProfileCommand
-  extends Partial<Pick<TablesUpdate<'profiles'>, 'username' | 'selected_level'>> {}
+export interface UpdateProfileCommand extends Partial<Pick<TablesUpdate<"profiles">, "username" | "selected_level">> {}
 
 // ============================================================================
 // User Progress DTOs
@@ -294,7 +283,7 @@ export interface UserProgressSummaryDTO {
  * Command model for POST /api/tutorials/:id/complete
  * Records tutorial completion for the authenticated user
  */
-export type CompleteTutorialCommand = Pick<TablesInsert<'user_tutorials'>, 'tutorial_id'>;
+export type CompleteTutorialCommand = Pick<TablesInsert<"user_tutorials">, "tutorial_id">;
 
 /**
  * Response DTO for POST /api/tutorials/:id/complete
@@ -303,14 +292,14 @@ export interface CompleteTutorialResponseDTO {
   tutorial_id: string;
   user_id: string;
   completed_at: string;
-  status: 'created' | 'already_completed';
+  status: "created" | "already_completed";
 }
 
 /**
  * Command model for POST /api/articles/:id/complete
  * Records article completion for the authenticated user
  */
-export type CompleteArticleCommand = Pick<TablesInsert<'user_articles'>, 'article_id'>;
+export type CompleteArticleCommand = Pick<TablesInsert<"user_articles">, "article_id">;
 
 /**
  * Response DTO for POST /api/articles/:id/complete
@@ -319,7 +308,7 @@ export interface CompleteArticleResponseDTO {
   article_id: string;
   user_id: string;
   completed_at: string;
-  status: 'created' | 'already_completed';
+  status: "created" | "already_completed";
 }
 
 // ============================================================================
@@ -409,13 +398,13 @@ export interface ApiErrorResponse {
  * Common error codes used across the API
  */
 export type ApiErrorCode =
-  | 'UNAUTHORIZED'
-  | 'FORBIDDEN'
-  | 'NOT_FOUND'
-  | 'VALIDATION_ERROR'
-  | 'CONFLICT'
-  | 'RATE_LIMIT_EXCEEDED'
-  | 'INTERNAL_SERVER_ERROR';
+  | "UNAUTHORIZED"
+  | "FORBIDDEN"
+  | "NOT_FOUND"
+  | "VALIDATION_ERROR"
+  | "CONFLICT"
+  | "RATE_LIMIT_EXCEEDED"
+  | "INTERNAL_SERVER_ERROR";
 
 // ============================================================================
 // Helper Types
@@ -429,7 +418,7 @@ export type AuthenticatedUserId = string;
 /**
  * Sort order types used across multiple endpoints
  */
-export type SortOrder = 'asc' | 'desc';
+export type SortOrder = "asc" | "desc";
 
 /**
  * Common success message response

@@ -4,11 +4,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import type {
-  GetTutorialDetailResponseDTO,
-  ApiErrorResponse,
-  TutorialStep,
-} from "../../types";
+import type { GetTutorialDetailResponseDTO, ApiErrorResponse, TutorialStep } from "../../types";
 import type {
   TutorialDetailVM,
   TutorialDetailErrorVM,
@@ -62,10 +58,7 @@ async function parseApiError(response: Response): Promise<TutorialDetailErrorVM>
 /**
  * Map tutorial DTO to view model
  */
-function mapDtoToVM(
-  dto: GetTutorialDetailResponseDTO,
-  isAuthenticated: boolean
-): TutorialDetailVM {
+function mapDtoToVM(dto: GetTutorialDetailResponseDTO, isAuthenticated: boolean): TutorialDetailVM {
   // Map header
   const header: TutorialHeaderVM = {
     title: dto.title,
@@ -112,9 +105,7 @@ function mapDtoToVM(
 /**
  * Custom hook for fetching tutorial detail
  */
-export function useTutorialDetail(
-  options: UseTutorialDetailOptions
-): UseTutorialDetailReturn {
+export function useTutorialDetail(options: UseTutorialDetailOptions): UseTutorialDetailReturn {
   const { tutorialId, isAuthenticated } = options;
 
   // Data state

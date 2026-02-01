@@ -7,11 +7,14 @@ if (!window.matchMedia) {
       matches: false,
       media: query,
       onchange: null,
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       addListener: () => {},
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       removeListener: () => {},
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       addEventListener: () => {},
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       removeEventListener: () => {},
       dispatchEvent: () => false,
     }) satisfies MediaQueryList) as typeof window.matchMedia;
 }
-

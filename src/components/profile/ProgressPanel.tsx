@@ -3,8 +3,8 @@
  * Displays user progress for the currently selected learning level
  */
 
-import { Button } from '../ui/button';
-import type { ProfileProgressVM } from './profile.types';
+import { Button } from "../ui/button";
+import type { ProfileProgressVM } from "./profile.types";
 
 interface ProgressPanelProps {
   isLoading: boolean;
@@ -40,9 +40,7 @@ export function ProgressPanel({ isLoading, error, progress, onRetry }: ProgressP
       {/* Error state */}
       {!isLoading && error && (
         <div className="space-y-4">
-          <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-            {error}
-          </div>
+          <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
           {onRetry && (
             <Button variant="outline" size="sm" onClick={onRetry}>
               Retry
@@ -58,9 +56,7 @@ export function ProgressPanel({ isLoading, error, progress, onRetry }: ProgressP
           {progress.emptyState ? (
             <div className="text-sm text-muted-foreground">
               <p>No content available for {formatLevel(progress.selectedLevel)} level yet.</p>
-              <p className="mt-2">
-                Progress tracking will appear here once content is added to this level.
-              </p>
+              <p className="mt-2">Progress tracking will appear here once content is added to this level.</p>
             </div>
           ) : (
             <>
@@ -90,12 +86,10 @@ export function ProgressPanel({ isLoading, error, progress, onRetry }: ProgressP
                 <p className="text-sm font-medium text-muted-foreground">Status:</p>
                 <span
                   className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                    progress.isUpToDate
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-yellow-100 text-yellow-800'
+                    progress.isUpToDate ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
                   }`}
                 >
-                  {progress.isUpToDate ? 'Up to date' : 'Out of date'}
+                  {progress.isUpToDate ? "Up to date" : "Out of date"}
                 </span>
               </div>
 
@@ -105,16 +99,13 @@ export function ProgressPanel({ isLoading, error, progress, onRetry }: ProgressP
                 <p className="mt-1 text-sm text-muted-foreground">
                   {progress.isEligibleToAdvance ? (
                     <>
-                      <span className="font-medium text-foreground">Eligible to advance!</span> You
-                      can consider moving to the next level.
+                      <span className="font-medium text-foreground">Eligible to advance!</span> You can consider moving
+                      to the next level.
                     </>
-                  ) : progress.selectedLevel === 'EXPERIENCED' ? (
+                  ) : progress.selectedLevel === "EXPERIENCED" ? (
                     <>You&apos;re already at the highest level.</>
                   ) : (
-                    <>
-                      Complete at least 85% of content at this level to become eligible for
-                      advancement.
-                    </>
+                    <>Complete at least 85% of content at this level to become eligible for advancement.</>
                   )}
                 </p>
               </div>

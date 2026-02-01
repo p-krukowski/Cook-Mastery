@@ -12,12 +12,7 @@ import type {
   ArticleListItemDTO,
   ApiErrorResponse,
 } from "../../types";
-import type {
-  HomeViewMode,
-  HomeFeedStateVM,
-  HomeContentItemVM,
-  HomeFeedErrorVM,
-} from "../home/home.types";
+import type { HomeViewMode, HomeFeedStateVM, HomeContentItemVM, HomeFeedErrorVM } from "../home/home.types";
 
 interface UseHomeFeedsOptions {
   initialMode?: HomeViewMode;
@@ -48,10 +43,7 @@ function isCreatedWithinDays(createdAt: string, days: number): boolean {
 /**
  * Helper: Map tutorial DTO to view model
  */
-function mapTutorialToVM(
-  dto: TutorialListItemDTO,
-  mode: HomeViewMode
-): HomeContentItemVM {
+function mapTutorialToVM(dto: TutorialListItemDTO, mode: HomeViewMode): HomeContentItemVM {
   return {
     type: "tutorial",
     id: dto.id,
@@ -70,10 +62,7 @@ function mapTutorialToVM(
 /**
  * Helper: Map article DTO to view model
  */
-function mapArticleToVM(
-  dto: ArticleListItemDTO,
-  mode: HomeViewMode
-): HomeContentItemVM {
+function mapArticleToVM(dto: ArticleListItemDTO, mode: HomeViewMode): HomeContentItemVM {
   return {
     type: "article",
     id: dto.id,
@@ -117,8 +106,7 @@ export function useHomeFeeds(options: UseHomeFeedsOptions = {}): UseHomeFeedsRet
   const { initialMode = "anonymous", selectedLevel } = options;
 
   // Determine mode based on selectedLevel availability
-  const mode: HomeViewMode =
-    selectedLevel && initialMode === "authenticated" ? "authenticated" : "anonymous";
+  const mode: HomeViewMode = selectedLevel && initialMode === "authenticated" ? "authenticated" : "anonymous";
 
   // State
   const [tutorials, setTutorials] = useState<HomeContentItemVM[]>([]);

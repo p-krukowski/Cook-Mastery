@@ -32,12 +32,7 @@ export function PaginationControls({
   return (
     <nav aria-label="Pagination" className="flex items-center justify-center gap-4">
       {/* Previous button */}
-      <Button
-        variant="outline"
-        onClick={onPrev}
-        disabled={isPrevDisabled}
-        aria-label="Go to previous page"
-      >
+      <Button variant="outline" onClick={onPrev} disabled={isPrevDisabled} aria-label="Go to previous page">
         Previous
       </Button>
 
@@ -47,12 +42,7 @@ export function PaginationControls({
       </span>
 
       {/* Next button */}
-      <Button
-        variant="outline"
-        onClick={onNext}
-        disabled={isNextDisabled}
-        aria-label="Go to next page"
-      >
+      <Button variant="outline" onClick={onNext} disabled={isNextDisabled} aria-label="Go to next page">
         Next
       </Button>
     </nav>

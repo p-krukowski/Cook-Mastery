@@ -59,6 +59,7 @@ export async function listArticles(
   const { data: articles, error, count } = await query;
 
   if (error) {
+    // eslint-disable-next-line no-console
     console.error("Error fetching articles:", error);
     throw new Error("Failed to fetch articles from database");
   }
@@ -82,6 +83,7 @@ export async function listArticles(
 
     if (completionError) {
       // Log error but don't fail the request - graceful degradation
+      // eslint-disable-next-line no-console
       console.error("Error fetching completion status:", completionError);
     } else if (completions) {
       // Build lookup map: articleId -> completed_at

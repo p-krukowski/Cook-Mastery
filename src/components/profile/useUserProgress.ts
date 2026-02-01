@@ -2,9 +2,9 @@
  * Custom hook for fetching user progress summary
  */
 
-import { useState, useEffect, useCallback } from 'react';
-import type { UserProgressSummaryDTO, DifficultyLevel, ApiErrorResponse } from '../../types';
-import type { ProfileProgressVM } from './profile.types';
+import { useState, useEffect, useCallback } from "react";
+import type { UserProgressSummaryDTO, ApiErrorResponse } from "../../types";
+import type { ProfileProgressVM } from "./profile.types";
 
 interface UseUserProgressOptions {
   enabled?: boolean;
@@ -21,13 +21,9 @@ interface UseUserProgressResult {
 /**
  * Transform UserProgressSummaryDTO to ProfileProgressVM for the selected level
  */
-function transformToProgressVM(
-  summary: UserProgressSummaryDTO
-): ProfileProgressVM | null {
+function transformToProgressVM(summary: UserProgressSummaryDTO): ProfileProgressVM | null {
   // Find progress for the selected level
-  const levelProgress = summary.level_progress.find(
-    (lp) => lp.level === summary.selected_level
-  );
+  const levelProgress = summary.level_progress.find((lp) => lp.level === summary.selected_level);
 
   if (!levelProgress) {
     return null;
@@ -46,18 +42,14 @@ function transformToProgressVM(
 
 /**
  * Hook to fetch and manage user progress summary
- * 
+ *
  * @param options - Configuration options
  * @returns Progress data, loading state, error state, and retry function
  */
-export function useUserProgress(
-  options: UseUserProgressOptions = {}
-): UseUserProgressResult {
+export function useUserProgress(options: UseUserProgressOptions = {}): UseUserProgressResult {
   const { enabled = true, initialData } = options;
 
-  const [data, setData] = useState<ProfileProgressVM | null>(
-    initialData ? transformToProgressVM(initialData) : null
-  );
+  const [data, setData] = useState<ProfileProgressVM | null>(initialData ? transformToProgressVM(initialData) : null);
   const [isLoading, setIsLoading] = useState(!initialData && enabled);
   const [error, setError] = useState<string | null>(null);
   const [refetchTrigger, setRefetchTrigger] = useState(0);
@@ -72,18 +64,18 @@ export function useUserProgress(
     setError(null);
 
     try {
-      const response = await fetch('/api/progress/summary');
+      const response = await fetch("/api/progress/summary");
 
       // Handle 401 - session expired
       if (response.status === 401) {
-        window.location.href = '/login';
+        window.location.href = "/login";
         return;
       }
 
       // Handle other errors
       if (!response.ok) {
         const errorData = (await response.json()) as ApiErrorResponse;
-        setError(errorData.error.message || 'Failed to load progress');
+        setError(errorData.error.message || "Failed to load progress");
         return;
       }
 
@@ -91,7 +83,7 @@ export function useUserProgress(
       const summary = (await response.json()) as UserProgressSummaryDTO;
       const progressVM = transformToProgressVM(summary);
       setData(progressVM);
-    } catch (err) {
+    } catch {
       // Network error
       setError("Couldn't load progress. Check your connection.");
     } finally {

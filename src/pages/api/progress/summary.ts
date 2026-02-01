@@ -7,13 +7,9 @@
  * Requires authentication - returns 401 if user is not logged in.
  */
 
-import type { APIContext } from 'astro';
-import { getUserProgressSummary } from '../../../lib/services/progress.service';
-import {
-  createErrorResponse,
-  createJsonResponse,
-  logError,
-} from '../../../lib/utils/error-handler';
+import type { APIContext } from "astro";
+import { getUserProgressSummary } from "../../../lib/services/progress.service";
+import { createErrorResponse, createJsonResponse, logError } from "../../../lib/utils/error-handler";
 
 // Disable prerendering for this API route
 export const prerender = false;
@@ -37,45 +33,35 @@ export async function GET(context: APIContext): Promise<Response> {
 
     // Return 401 if authentication fails or user is missing
     if (authError || !user) {
-      return createJsonResponse(
-        createErrorResponse('UNAUTHORIZED', 'Authentication required to view progress'),
-        401
-      );
+      return createJsonResponse(createErrorResponse("UNAUTHORIZED", "Authentication required to view progress"), 401);
     }
 
     // Get user's profile to determine selected level
     const profile = context.locals.profile;
     if (!profile) {
-      return createJsonResponse(
-        createErrorResponse('UNAUTHORIZED', 'Profile not found'),
-        401
-      );
+      return createJsonResponse(createErrorResponse("UNAUTHORIZED", "Profile not found"), 401);
     }
 
     // Call service to fetch progress summary
-    const progressSummary = await getUserProgressSummary(
-      supabase,
-      user.id,
-      profile.selected_level
-    );
+    const progressSummary = await getUserProgressSummary(supabase, user.id, profile.selected_level);
 
     // Return successful response
     return new Response(JSON.stringify(progressSummary), {
       status: 200,
       headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'private, no-cache',
+        "Content-Type": "application/json",
+        "Cache-Control": "private, no-cache",
       },
     });
   } catch (error: unknown) {
     // Handle service-level errors (thrown as ApiErrorResponse)
     if (
       error &&
-      typeof error === 'object' &&
-      'error' in error &&
-      typeof error.error === 'object' &&
+      typeof error === "object" &&
+      "error" in error &&
+      typeof error.error === "object" &&
       error.error !== null &&
-      'code' in error.error
+      "code" in error.error
     ) {
       const apiError = error as { error: { code: string; message: string } };
       const statusMap: Record<string, number> = {
@@ -87,12 +73,9 @@ export async function GET(context: APIContext): Promise<Response> {
     }
 
     // Log unexpected errors
-    logError('GET /api/progress/summary', error, { userId: context.locals.user?.id });
+    logError("GET /api/progress/summary", error, { userId: context.locals.user?.id });
 
     // Return generic 500 error
-    return createJsonResponse(
-      createErrorResponse('INTERNAL_SERVER_ERROR', 'An unexpected error occurred'),
-      500
-    );
+    return createJsonResponse(createErrorResponse("INTERNAL_SERVER_ERROR", "An unexpected error occurred"), 500);
   }
 }

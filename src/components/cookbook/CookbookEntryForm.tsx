@@ -3,10 +3,10 @@
  * Renders URL, Title inputs and Notes textarea with inline validation errors
  */
 
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { InlineFieldError } from '@/components/auth/InlineFieldError';
-import type { CookbookEntryFormVM, CookbookEntryFormErrorsVM } from './cookbook.types';
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { InlineFieldError } from "@/components/auth/InlineFieldError";
+import type { CookbookEntryFormVM, CookbookEntryFormErrorsVM } from "./cookbook.types";
 
 interface CookbookEntryFormProps {
   value: CookbookEntryFormVM;
@@ -56,7 +56,7 @@ export default function CookbookEntryForm({
           disabled={disabled}
           placeholder="https://example.com/recipe"
           aria-invalid={!!errors.url}
-          aria-describedby={errors.url ? 'url-error' : undefined}
+          aria-describedby={errors.url ? "url-error" : undefined}
           data-test-id="cookbook-url-input"
         />
         <InlineFieldError error={errors.url} />
@@ -75,7 +75,7 @@ export default function CookbookEntryForm({
           disabled={disabled}
           placeholder="Recipe name"
           aria-invalid={!!errors.title}
-          aria-describedby={errors.title ? 'title-error' : undefined}
+          aria-describedby={errors.title ? "title-error" : undefined}
           data-test-id="cookbook-title-input"
         />
         <InlineFieldError error={errors.title} />
@@ -93,7 +93,7 @@ export default function CookbookEntryForm({
           rows={6}
           className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           aria-invalid={!!errors.notes}
-          aria-describedby={errors.notes ? 'notes-error' : undefined}
+          aria-describedby={errors.notes ? "notes-error" : undefined}
           data-test-id="cookbook-notes-textarea"
         />
         <InlineFieldError error={errors.notes} />

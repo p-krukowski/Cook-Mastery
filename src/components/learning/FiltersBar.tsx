@@ -16,13 +16,7 @@ interface FiltersBarProps {
   onLevelChange: (next: LearningLevelFilter) => void;
 }
 
-export function FiltersBar({
-  type,
-  level,
-  userSelectedLevel,
-  onTypeChange,
-  onLevelChange,
-}: FiltersBarProps) {
+export function FiltersBar({ type, level, userSelectedLevel, onTypeChange, onLevelChange }: FiltersBarProps) {
   return (
     <div className="flex flex-col gap-4">
       {/* Filters row */}
@@ -30,11 +24,7 @@ export function FiltersBar({
         {/* Left: Filter controls */}
         <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
           <TypeFilter value={type} onChange={onTypeChange} />
-          <LevelFilter
-            value={level}
-            userSelectedLevel={userSelectedLevel}
-            onChange={onLevelChange}
-          />
+          <LevelFilter value={level} userSelectedLevel={userSelectedLevel} onChange={onLevelChange} />
         </div>
 
         {/* Right: Context label */}

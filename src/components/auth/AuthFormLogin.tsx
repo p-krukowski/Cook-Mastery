@@ -1,26 +1,20 @@
-import * as React from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { InlineFieldError } from "./InlineFieldError"
-import type { ApiErrorResponse } from "@/types"
+import * as React from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { InlineFieldError } from "./InlineFieldError";
+import type { ApiErrorResponse } from "@/types";
 
 interface LoginFormData {
-  identifier: string
-  password: string
+  identifier: string;
+  password: string;
 }
 
 interface LoginFormErrors {
-  identifier?: string
-  password?: string
-  general?: string
+  identifier?: string;
+  password?: string;
+  general?: string;
 }
 
 /**
@@ -32,38 +26,38 @@ export function AuthFormLogin() {
   const [formData, setFormData] = React.useState<LoginFormData>({
     identifier: "",
     password: "",
-  })
-  const [errors, setErrors] = React.useState<LoginFormErrors>({})
-  const [isSubmitting, setIsSubmitting] = React.useState(false)
+  });
+  const [errors, setErrors] = React.useState<LoginFormErrors>({});
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   // Client-side validation
   const validateForm = (): boolean => {
-    const newErrors: LoginFormErrors = {}
+    const newErrors: LoginFormErrors = {};
 
     if (!formData.identifier.trim()) {
-      newErrors.identifier = "Email or username is required."
+      newErrors.identifier = "Email or username is required.";
     }
 
     if (!formData.password) {
-      newErrors.password = "Password is required."
+      newErrors.password = "Password is required.";
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Clear previous errors
-    setErrors({})
+    setErrors({});
 
     // Validate
     if (!validateForm()) {
-      return
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
       const response = await fetch("/api/auth/login", {
@@ -75,50 +69,48 @@ export function AuthFormLogin() {
           identifier: formData.identifier.trim(),
           password: formData.password,
         }),
-      })
+      });
 
       if (!response.ok) {
-        const errorData: ApiErrorResponse = await response.json()
+        const errorData: ApiErrorResponse = await response.json();
 
         if (response.status === 401) {
           // Generic invalid credentials error
-          setErrors({ general: errorData.error.message })
+          setErrors({ general: errorData.error.message });
         } else if (response.status === 400 && errorData.error.details) {
           // Field-specific validation errors
-          setErrors(errorData.error.details as LoginFormErrors)
+          setErrors(errorData.error.details as LoginFormErrors);
         } else {
           // Other errors
-          setErrors({ general: errorData.error.message })
+          setErrors({ general: errorData.error.message });
         }
-        return
+        return;
       }
 
       // Success - redirect to home
-      window.location.href = "/"
-    } catch (error) {
+      window.location.href = "/";
+    } catch {
       setErrors({
         general: "An unexpected error occurred. Please try again.",
-      })
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleInputChange = (field: keyof LoginFormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+    setFormData((prev) => ({ ...prev, [field]: value }));
     // Clear field error when user starts typing
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }))
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
-  }
+  };
 
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl">Log in</CardTitle>
-        <CardDescription>
-          Enter your email or username and password to access your account
-        </CardDescription>
+        <CardDescription>Enter your email or username and password to access your account</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4" noValidate data-test-id="login-form">
@@ -147,17 +139,10 @@ export function AuthFormLogin() {
               onChange={(e) => handleInputChange("identifier", e.target.value)}
               disabled={isSubmitting}
               aria-invalid={!!errors.identifier}
-              aria-describedby={
-                errors.identifier ? "identifier-error" : undefined
-              }
+              aria-describedby={errors.identifier ? "identifier-error" : undefined}
               data-test-id="login-identifier-input"
             />
-            {errors.identifier && (
-              <InlineFieldError
-                error={errors.identifier}
-                aria-id="identifier-error"
-              />
-            )}
+            {errors.identifier && <InlineFieldError error={errors.identifier} id="identifier-error" />}
           </div>
 
           {/* Password field */}
@@ -176,9 +161,7 @@ export function AuthFormLogin() {
               aria-describedby={errors.password ? "password-error" : undefined}
               data-test-id="login-password-input"
             />
-            {errors.password && (
-              <InlineFieldError error={errors.password} aria-id="password-error" />
-            )}
+            {errors.password && <InlineFieldError error={errors.password} id="password-error" />}
           </div>
 
           {/* Submit button */}
@@ -194,16 +177,13 @@ export function AuthFormLogin() {
 
           {/* Link to signup */}
           <div className="text-center text-sm text-muted-foreground">
-            Don't have an account?{" "}
-            <a
-              href="/signup"
-              className="text-primary hover:underline focus:outline-none focus:underline"
-            >
+            Don&apos;t have an account?{" "}
+            <a href="/signup" className="text-primary hover:underline focus:outline-none focus:underline">
               Sign up
             </a>
           </div>
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }

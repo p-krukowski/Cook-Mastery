@@ -23,15 +23,7 @@ interface HomeSectionProps {
   onRetry: () => void;
 }
 
-export function HomeSection({
-  kind,
-  title,
-  description,
-  items,
-  isLoading,
-  error,
-  onRetry,
-}: HomeSectionProps) {
+export function HomeSection({ kind, title, description, items, isLoading, error, onRetry }: HomeSectionProps) {
   const headingId = useId();
 
   return (
@@ -43,24 +35,17 @@ export function HomeSection({
 
       {/* Error State */}
       {!isLoading && error && (
-        <FullPageError
-          title={`Couldn't load ${kind}`}
-          message={error.message}
-          onRetry={onRetry}
-        />
+        <FullPageError title={`Couldn't load ${kind}`} message={error.message} onRetry={onRetry} />
       )}
 
       {/* Empty State */}
       {!isLoading && !error && items.length === 0 && (
-        <EmptyState
-          title={`No ${kind} available`}
-          description={`Check back later for new ${kind}.`}
-        />
+        <EmptyState title={`No ${kind} available`} description={`Check back later for new ${kind}.`} />
       )}
 
       {/* Success State - Content Grid */}
       {!isLoading && !error && items.length > 0 && (
-        <ul role="list" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
             <ContentCard key={item.id} item={item} />
           ))}

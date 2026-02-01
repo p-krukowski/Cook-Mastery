@@ -3,14 +3,14 @@
  * Fetches and displays paginated list of user's saved recipe links
  */
 
-import { useId } from 'react';
-import useCookbookEntries from './useCookbookEntries';
-import CookbookEntryCard from './CookbookEntryCard';
-import { LoadingState } from '@/components/shared/LoadingState';
-import { EmptyState } from '@/components/shared/EmptyState';
-import { FullPageError } from '@/components/shared/FullPageError';
-import { PaginationControls } from '@/components/shared/PaginationControls';
-import type { CookbookSort } from './cookbook.types';
+import { useId } from "react";
+import useCookbookEntries from "./useCookbookEntries";
+import CookbookEntryCard from "./CookbookEntryCard";
+import { LoadingState } from "@/components/shared/LoadingState";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { FullPageError } from "@/components/shared/FullPageError";
+import { PaginationControls } from "@/components/shared/PaginationControls";
+import type { CookbookSort } from "./cookbook.types";
 
 interface CookbookListViewProps {
   isAuthenticated: boolean;
@@ -18,11 +18,7 @@ interface CookbookListViewProps {
   defaultLimit?: number;
 }
 
-export default function CookbookListView({
-  isAuthenticated,
-  defaultSort = 'newest',
-  defaultLimit = 20,
-}: CookbookListViewProps) {
+export default function CookbookListView({ defaultSort = "newest", defaultLimit = 20 }: CookbookListViewProps) {
   const headingId = useId();
 
   // Fetch entries with hook
@@ -40,7 +36,7 @@ export default function CookbookListView({
           <h2 id={headingId} className="text-3xl font-bold tracking-tight">
             Cookbook
           </h2>
-          <p className="mt-1 text-muted-foreground">Private recipe links you've saved.</p>
+          <p className="mt-1 text-muted-foreground">Private recipe links you&apos;ve saved.</p>
         </div>
         <a
           href="/cookbook/new"
@@ -78,7 +74,7 @@ export default function CookbookListView({
         {/* Error state */}
         {error && !isLoading && (
           <FullPageError
-            title={error.status === 500 ? 'Server error' : 'Something went wrong'}
+            title={error.status === 500 ? "Server error" : "Something went wrong"}
             message={error.message}
             onRetry={retry}
           />
@@ -95,7 +91,7 @@ export default function CookbookListView({
         {/* Success state - entries grid */}
         {!isLoading && !error && data && data.entries.length > 0 && (
           <>
-            <ul role="list" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {data.entries.map((entry) => (
                 <CookbookEntryCard key={entry.id} entry={entry} />
               ))}

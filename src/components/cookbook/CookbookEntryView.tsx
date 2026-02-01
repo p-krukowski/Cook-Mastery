@@ -3,35 +3,30 @@
  * Handles load, view/edit modes, and delete operations
  */
 
-import { useId, useState, useEffect } from 'react';
-import { toast } from 'sonner';
-import useCookbookEntry from './useCookbookEntry';
-import CookbookEntryDetail from './CookbookEntryDetail';
-import { LoadingState } from '@/components/shared/LoadingState';
-import { NotFoundState } from '@/components/shared/NotFoundState';
-import { FullPageError } from '@/components/shared/FullPageError';
-import { createFormFromDetail, areFormsEqual, isValidUrl } from './cookbook.types';
-import type {
-  CookbookEntryFormVM,
-  CookbookEntryFormErrorsVM,
-  CookbookEntryDetailVM,
-} from './cookbook.types';
-import type { UpdateCookbookEntryCommand, ApiErrorResponse } from '@/types';
+import { useId, useState, useEffect } from "react";
+import { toast } from "sonner";
+import useCookbookEntry from "./useCookbookEntry";
+import CookbookEntryDetail from "./CookbookEntryDetail";
+import { NotFoundState } from "@/components/shared/NotFoundState";
+import { FullPageError } from "@/components/shared/FullPageError";
+import { createFormFromDetail, areFormsEqual, isValidUrl } from "./cookbook.types";
+import type { CookbookEntryFormVM, CookbookEntryFormErrorsVM, CookbookEntryDetailVM } from "./cookbook.types";
+import type { UpdateCookbookEntryCommand, ApiErrorResponse } from "@/types";
 
 interface CookbookEntryViewProps {
   entryId: string;
   isAuthenticated: boolean;
 }
 
-export default function CookbookEntryView({ entryId, isAuthenticated }: CookbookEntryViewProps) {
+export default function CookbookEntryView({ entryId }: CookbookEntryViewProps) {
   const headingId = useId();
 
   // Fetch entry data
   const { data, isLoading, error, isNotFound, retry } = useCookbookEntry({ entryId });
 
   // Edit state
-  const [mode, setMode] = useState<'view' | 'edit'>('view');
-  const [form, setForm] = useState<CookbookEntryFormVM>({ url: '', title: '', notes: '' });
+  const [mode, setMode] = useState<"view" | "edit">("view");
+  const [form, setForm] = useState<CookbookEntryFormVM>({ url: "", title: "", notes: "" });
   const [errors, setErrors] = useState<CookbookEntryFormErrorsVM>({});
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -46,15 +41,13 @@ export default function CookbookEntryView({ entryId, isAuthenticated }: Cookbook
   }, [data]);
 
   // Check if form is dirty
-  const isDirty =
-    lastSavedEntry !== null &&
-    !areFormsEqual(form, createFormFromDetail(lastSavedEntry));
+  const isDirty = lastSavedEntry !== null && !areFormsEqual(form, createFormFromDetail(lastSavedEntry));
 
   /**
    * Handle edit mode toggle
    */
   const handleEdit = () => {
-    setMode('edit');
+    setMode("edit");
     setErrors({});
   };
 
@@ -66,7 +59,7 @@ export default function CookbookEntryView({ entryId, isAuthenticated }: Cookbook
       setForm(createFormFromDetail(lastSavedEntry));
     }
     setErrors({});
-    setMode('view');
+    setMode("view");
   };
 
   /**
@@ -98,7 +91,7 @@ export default function CookbookEntryView({ entryId, isAuthenticated }: Cookbook
 
     // Check if anything changed
     if (!isDirty) {
-      setErrors({ general: 'No changes to save.' });
+      setErrors({ general: "No changes to save." });
       return;
     }
 
@@ -113,12 +106,12 @@ export default function CookbookEntryView({ entryId, isAuthenticated }: Cookbook
       if (form.url.trim() !== lastForm.url) {
         // Validate URL if changed
         if (!form.url.trim()) {
-          setErrors({ url: 'URL is required' });
+          setErrors({ url: "URL is required" });
           setIsSaving(false);
           return;
         }
         if (!isValidUrl(form.url)) {
-          setErrors({ url: 'Please enter a valid URL starting with http:// or https://' });
+          setErrors({ url: "Please enter a valid URL starting with http:// or https://" });
           setIsSaving(false);
           return;
         }
@@ -128,7 +121,7 @@ export default function CookbookEntryView({ entryId, isAuthenticated }: Cookbook
       if (form.title.trim() !== lastForm.title) {
         // Validate title if changed
         if (!form.title.trim()) {
-          setErrors({ title: 'Title is required' });
+          setErrors({ title: "Title is required" });
           setIsSaving(false);
           return;
         }
@@ -141,27 +134,27 @@ export default function CookbookEntryView({ entryId, isAuthenticated }: Cookbook
 
       // Ensure at least one field is present
       if (Object.keys(command).length === 0) {
-        setErrors({ general: 'No changes to save.' });
+        setErrors({ general: "No changes to save." });
         setIsSaving(false);
         return;
       }
 
       const response = await fetch(`/api/cookbook/${entryId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(command),
       });
 
       // Handle 401 - session expired
       if (response.status === 401) {
-        window.location.href = '/login';
+        window.location.href = "/login";
         return;
       }
 
       // Handle 404 - entry not found or no longer accessible
       if (response.status === 404) {
-        toast.error('Entry not found');
-        window.location.href = '/cookbook';
+        toast.error("Entry not found");
+        window.location.href = "/cookbook";
         return;
       }
 
@@ -196,7 +189,7 @@ export default function CookbookEntryView({ entryId, isAuthenticated }: Cookbook
       // Handle other errors
       if (!response.ok) {
         const errorData = (await response.json()) as ApiErrorResponse;
-        toast.error(errorData.error.message || 'Failed to save changes');
+        toast.error(errorData.error.message || "Failed to save changes");
         return;
       }
 
@@ -206,13 +199,13 @@ export default function CookbookEntryView({ entryId, isAuthenticated }: Cookbook
         ...lastSavedEntry,
         url: updatedData.url,
         title: updatedData.title,
-        notes: updatedData.notes ?? '',
+        notes: updatedData.notes ?? "",
       };
       setLastSavedEntry(updatedVM);
       setForm(createFormFromDetail(updatedVM));
-      setMode('view');
-      toast.success('Changes saved');
-    } catch (err) {
+      setMode("view");
+      toast.success("Changes saved");
+    } catch {
       // Network error
       toast.error("Couldn't save changes. Check your connection.");
     } finally {
@@ -225,41 +218,41 @@ export default function CookbookEntryView({ entryId, isAuthenticated }: Cookbook
    */
   const handleDelete = async () => {
     // Confirm deletion
-    const confirmed = window.confirm('Delete this cookbook entry?');
+    const confirmed = window.confirm("Delete this cookbook entry?");
     if (!confirmed) return;
 
     setIsDeleting(true);
 
     try {
       const response = await fetch(`/api/cookbook/${entryId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       // Handle 401 - session expired
       if (response.status === 401) {
-        window.location.href = '/login';
+        window.location.href = "/login";
         return;
       }
 
       // Handle 404 - entry not found (already deleted or never existed)
       if (response.status === 404) {
-        toast.error('Entry not found');
-        window.location.href = '/cookbook';
+        toast.error("Entry not found");
+        window.location.href = "/cookbook";
         return;
       }
 
       // Handle other errors
       if (!response.ok) {
         const errorData = (await response.json()) as ApiErrorResponse;
-        toast.error(errorData.error.message || 'Failed to delete entry');
+        toast.error(errorData.error.message || "Failed to delete entry");
         setIsDeleting(false);
         return;
       }
 
       // Success
-      toast.success('Entry deleted');
-      window.location.href = '/cookbook';
-    } catch (err) {
+      toast.success("Entry deleted");
+      window.location.href = "/cookbook";
+    } catch {
       // Network error
       toast.error("Couldn't delete entry. Check your connection.");
       setIsDeleting(false);
@@ -269,10 +262,7 @@ export default function CookbookEntryView({ entryId, isAuthenticated }: Cookbook
   return (
     <section aria-labelledby={headingId} className="w-full">
       <div className="mb-6">
-        <a
-          href="/cookbook"
-          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
+        <a href="/cookbook" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
           ← Back to Cookbook
         </a>
       </div>
@@ -299,7 +289,7 @@ export default function CookbookEntryView({ entryId, isAuthenticated }: Cookbook
       {/* Error state */}
       {error && !isLoading && !isNotFound && (
         <FullPageError
-          title={error.status === 500 ? 'Server error' : 'Something went wrong'}
+          title={error.status === 500 ? "Server error" : "Something went wrong"}
           message={error.message}
           onRetry={retry}
         />

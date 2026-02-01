@@ -1,10 +1,10 @@
 ---
-import Layout from '@/layouts/Layout.astro';
-import CookbookCreateView from '@/components/cookbook/CookbookCreateView';
+import Layout from "@/layouts/Layout.astro";
+import CookbookCreateView from "@/components/cookbook/CookbookCreateView";
 
 // Defensive redirect if middleware didn't handle auth
 if (!Astro.locals.user || !Astro.locals.profile) {
-  return Astro.redirect('/login');
+  return Astro.redirect("/login");
 }
 
 const isAuthenticated = true;

@@ -1,10 +1,10 @@
-import { useState, useCallback, useEffect } from 'react';
-import { toast } from 'sonner';
-import { Button } from '../ui/button';
-import { LevelSelector } from '../auth/LevelSelector';
-import { ProgressPanel } from './ProgressPanel';
-import { useUserProgress } from './useUserProgress';
-import type { ProfileDTO, DifficultyLevel, UpdateProfileCommand, ApiErrorResponse } from '../../types';
+import { useState, useCallback, useEffect } from "react";
+import { toast } from "sonner";
+import { Button } from "../ui/button";
+import { LevelSelector } from "../auth/LevelSelector";
+import { ProgressPanel } from "./ProgressPanel";
+import { useUserProgress } from "./useUserProgress";
+import type { ProfileDTO, DifficultyLevel, UpdateProfileCommand, ApiErrorResponse } from "../../types";
 
 interface ProfileViewProps {
   user: {
@@ -67,22 +67,22 @@ export default function ProfileView({ user, profile, enableProgress = true }: Pr
         selected_level: draftLevel,
       };
 
-      const response = await fetch('/api/profile', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(command),
       });
 
       // Handle 401 - session expired
       if (response.status === 401) {
-        window.location.href = '/login';
+        window.location.href = "/login";
         return;
       }
 
       // Handle validation errors (400)
       if (response.status === 400) {
         const errorData = (await response.json()) as ApiErrorResponse;
-        
+
         // Check for field-specific error
         if (errorData.error.details?.selected_level) {
           setSaveError(errorData.error.details.selected_level);
@@ -97,12 +97,12 @@ export default function ProfileView({ user, profile, enableProgress = true }: Pr
       // Handle other client/server errors with toast
       if (!response.ok) {
         const errorData = (await response.json()) as ApiErrorResponse;
-        
+
         // Rate limit or server errors get toast
         if (response.status === 429) {
-          toast.error('Too many requests. Please try again in a moment.');
+          toast.error("Too many requests. Please try again in a moment.");
         } else {
-          toast.error(errorData.error.message || 'Failed to update level');
+          toast.error(errorData.error.message || "Failed to update level");
         }
         return;
       }
@@ -112,7 +112,8 @@ export default function ProfileView({ user, profile, enableProgress = true }: Pr
       setSavedLevel(updatedProfile.selected_level);
       setDraftLevel(updatedProfile.selected_level);
       setSaveError(null);
-      toast.success('Level updated');
+      toast.success("Level updated");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       // Network error
       toast.error("Couldn't update level. Check your connection.");
@@ -131,22 +132,23 @@ export default function ProfileView({ user, profile, enableProgress = true }: Pr
     setIsLoggingOut(true);
 
     try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'Failed to log out');
+        throw new Error(errorData.error?.message || "Failed to log out");
       }
 
       // Redirect to login page on successful logout
-      window.location.href = '/login';
-    } catch (err) {
-      setLogoutError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      window.location.href = "/login";
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_err) {
+      setLogoutError("Failed to log out");
       setIsLoggingOut(false);
     }
   }, []);
@@ -157,15 +159,15 @@ export default function ProfileView({ user, profile, enableProgress = true }: Pr
   };
 
   // Client-side date formatting state
-  const [formattedDate, setFormattedDate] = useState<string>('');
+  const [formattedDate, setFormattedDate] = useState<string>("");
 
   // Format date on client-side to avoid hydration mismatch
   useEffect(() => {
     setFormattedDate(
-      new Date(profile.created_at).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
+      new Date(profile.created_at).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
       })
     );
   }, [profile.created_at]);
@@ -178,7 +180,7 @@ export default function ProfileView({ user, profile, enableProgress = true }: Pr
         {/* Profile Information Card */}
         <div className="rounded-lg border bg-card p-6 shadow-sm">
           <h2 className="mb-4 text-xl font-semibold">Account Information</h2>
-          
+
           <div className="space-y-4">
             <div>
               <p className="text-sm font-medium text-muted-foreground">Username</p>
@@ -215,7 +217,7 @@ export default function ProfileView({ user, profile, enableProgress = true }: Pr
         {/* Level Settings Card */}
         <div className="rounded-lg border bg-card p-6 shadow-sm">
           <h2 className="mb-4 text-xl font-semibold">Learning Level</h2>
-          
+
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
               Changing your level will change recommendations on the home page.
@@ -230,19 +232,11 @@ export default function ProfileView({ user, profile, enableProgress = true }: Pr
             />
 
             {/* Inline error display */}
-            {saveError && (
-              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                {saveError}
-              </div>
-            )}
+            {saveError && <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{saveError}</div>}
 
             {/* Save button */}
-            <Button
-              onClick={handleSaveLevel}
-              disabled={!isDirty || isSaving}
-              className="w-full sm:w-auto"
-            >
-              {isSaving ? 'Saving...' : 'Save level'}
+            <Button onClick={handleSaveLevel} disabled={!isDirty || isSaving} className="w-full sm:w-auto">
+              {isSaving ? "Saving..." : "Save level"}
             </Button>
           </div>
         </div>
@@ -250,25 +244,16 @@ export default function ProfileView({ user, profile, enableProgress = true }: Pr
         {/* Logout Section */}
         <div className="rounded-lg border bg-card p-6 shadow-sm">
           <h2 className="mb-4 text-xl font-semibold">Session</h2>
-          
+
           <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Log out of your account to end your current session.
-            </p>
+            <p className="text-sm text-muted-foreground">Log out of your account to end your current session.</p>
 
             {logoutError && (
-              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                {logoutError}
-              </div>
+              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{logoutError}</div>
             )}
 
-            <Button
-              variant="destructive"
-              onClick={handleLogout}
-              disabled={isLoggingOut}
-              className="w-full sm:w-auto"
-            >
-              {isLoggingOut ? 'Logging out...' : 'Log out'}
+            <Button variant="destructive" onClick={handleLogout} disabled={isLoggingOut} className="w-full sm:w-auto">
+              {isLoggingOut ? "Logging out..." : "Log out"}
             </Button>
           </div>
         </div>

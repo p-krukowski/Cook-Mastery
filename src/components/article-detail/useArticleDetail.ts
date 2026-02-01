@@ -4,10 +4,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import type {
-  GetArticleDetailResponseDTO,
-  ApiErrorResponse,
-} from "../../types";
+import type { GetArticleDetailResponseDTO, ApiErrorResponse } from "../../types";
 import type {
   ArticleDetailVM,
   ArticleDetailErrorVM,
@@ -15,12 +12,7 @@ import type {
   ArticleSectionsVM,
   ArticleCompletionVM,
 } from "./article-detail.types";
-import {
-  isUuid,
-  formatLevel,
-  formatDifficultyLabel,
-  formatCreatedAtLabel,
-} from "./article-detail.types";
+import { isUuid, formatLevel, formatDifficultyLabel, formatCreatedAtLabel } from "./article-detail.types";
 
 interface UseArticleDetailOptions {
   articleId: string;
@@ -59,10 +51,7 @@ async function parseApiError(response: Response): Promise<ArticleDetailErrorVM> 
 /**
  * Map article DTO to view model
  */
-function mapDtoToVM(
-  dto: GetArticleDetailResponseDTO,
-  isAuthenticated: boolean
-): ArticleDetailVM {
+function mapDtoToVM(dto: GetArticleDetailResponseDTO, isAuthenticated: boolean): ArticleDetailVM {
   // Map header
   const header: ArticleHeaderVM = {
     title: dto.title,
@@ -98,9 +87,7 @@ function mapDtoToVM(
 /**
  * Custom hook for fetching article detail
  */
-export function useArticleDetail(
-  options: UseArticleDetailOptions
-): UseArticleDetailReturn {
+export function useArticleDetail(options: UseArticleDetailOptions): UseArticleDetailReturn {
   const { articleId, isAuthenticated } = options;
 
   // Data state

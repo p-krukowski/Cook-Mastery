@@ -1,12 +1,12 @@
-import * as React from "react"
-import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
-import type { DifficultyLevel } from "@/types"
+import * as React from "react";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
+import type { DifficultyLevel } from "@/types";
 
 interface LevelOption {
-  value: DifficultyLevel
-  label: string
-  description: string
+  value: DifficultyLevel;
+  label: string;
+  description: string;
 }
 
 const levelOptions: LevelOption[] = [
@@ -25,51 +25,39 @@ const levelOptions: LevelOption[] = [
     label: "Experienced",
     description: "Confident with advanced cooking",
   },
-]
+];
 
 interface LevelSelectorProps {
-  value: DifficultyLevel | null
-  onChange: (level: DifficultyLevel) => void
-  error?: string
-  disabled?: boolean
+  value: DifficultyLevel | null;
+  onChange: (level: DifficultyLevel) => void;
+  error?: string;
+  disabled?: boolean;
 }
 
 /**
  * Single-select difficulty level selector for signup
  * Implements accessible radio group pattern
  */
-export function LevelSelector({
-  value,
-  onChange,
-  error,
-  disabled = false,
-}: LevelSelectorProps) {
-  const groupId = React.useId()
+export function LevelSelector({ value, onChange, error, disabled = false }: LevelSelectorProps) {
+  const groupId = React.useId();
 
   return (
     <div className="space-y-3">
       <Label htmlFor={groupId} className="text-base">
-        What's your skill level?
+        What&apos;s your skill level?
       </Label>
-      <div
-        role="radiogroup"
-        aria-labelledby={groupId}
-        aria-invalid={!!error}
-        className="space-y-2"
-      >
+      <div role="radiogroup" aria-labelledby={groupId} aria-invalid={!!error} className="space-y-2">
         {levelOptions.map((option) => {
-          const isSelected = value === option.value
-          const radioId = `${groupId}-${option.value}`
+          const isSelected = value === option.value;
+          const radioId = `${groupId}-${option.value}`;
 
           return (
-            <label
+            <div
               key={option.value}
-              htmlFor={radioId}
               className={cn(
                 "flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-all",
                 "hover:bg-accent/50",
-                isSelected &&
-                  "border-primary bg-primary/5 ring-2 ring-primary/20",
+                isSelected && "border-primary bg-primary/5 ring-2 ring-primary/20",
                 !isSelected && "border-border",
                 disabled && "opacity-50 cursor-not-allowed",
                 error && !isSelected && "border-destructive"
@@ -86,19 +74,16 @@ export function LevelSelector({
                 className="mt-0.5 h-4 w-4 text-primary focus:ring-2 focus:ring-primary/20"
                 aria-describedby={`${radioId}-description`}
               />
-              <div className="flex-1 space-y-1">
+              <label htmlFor={radioId} className="flex-1 space-y-1 cursor-pointer">
                 <div className="font-medium text-sm">{option.label}</div>
-                <div
-                  id={`${radioId}-description`}
-                  className="text-sm text-muted-foreground"
-                >
+                <div id={`${radioId}-description`} className="text-sm text-muted-foreground">
                   {option.description}
                 </div>
-              </div>
-            </label>
-          )
+              </label>
+            </div>
+          );
         })}
       </div>
     </div>
-  )
+  );
 }

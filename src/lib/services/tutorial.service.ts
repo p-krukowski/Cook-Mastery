@@ -65,6 +65,7 @@ export async function listTutorials(
   const { data: tutorials, error, count } = await query;
 
   if (error) {
+    // eslint-disable-next-line no-console
     console.error("Error fetching tutorials:", error);
     throw new Error("Failed to fetch tutorials from database");
   }
@@ -84,6 +85,7 @@ export async function listTutorials(
 
     if (completionError) {
       // Log error but don't fail the request - graceful degradation
+      // eslint-disable-next-line no-console
       console.error("Error fetching completion status:", completionError);
     } else if (completedTutorials) {
       completedTutorialIds = new Set(completedTutorials.map((t) => t.tutorial_id));

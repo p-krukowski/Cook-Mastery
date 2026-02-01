@@ -16,10 +16,10 @@ export function TutorialDetailSkeleton() {
       <div className="space-y-4">
         {/* Badge skeleton */}
         <div className="h-6 w-24 rounded-full bg-muted" />
-        
+
         {/* Title skeleton */}
         <div className="h-10 w-3/4 rounded bg-muted" />
-        
+
         {/* Metadata row skeleton */}
         <div className="flex items-center gap-3">
           <div className="h-4 w-20 rounded bg-muted" />
