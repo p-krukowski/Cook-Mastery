@@ -1,5 +1,5 @@
-import { type Page, type Locator } from '@playwright/test';
-import { BasePage } from './BasePage';
+import { type Page, type Locator } from "@playwright/test";
+import { BasePage } from "./BasePage";
 
 /**
  * LearningPage - Page Object Model for the Learning page
@@ -30,17 +30,15 @@ export class LearningPage extends BasePage {
     super(page);
 
     // Main page elements
-    this.pageHeading = page.getByRole('heading', { name: /learning/i });
-    this.pageDescription = page.getByText(
-      /browse all tutorials and articles/i
-    );
+    this.pageHeading = page.getByRole("heading", { name: /learning/i });
+    this.pageDescription = page.getByText(/browse all tutorials and articles/i);
 
     // Filters - using select element
-    this.typeFilterSelect = page.locator('select#learning-type');
+    this.typeFilterSelect = page.locator("select#learning-type");
 
     // Content list
     this.contentList = page.locator('ul[role="list"]');
-    this.contentCards = this.contentList.locator('li');
+    this.contentCards = this.contentList.locator("li");
 
     // Loading and error states
     this.loadingState = page.getByText(/loading/i);
@@ -48,15 +46,15 @@ export class LearningPage extends BasePage {
     this.emptyState = page.getByText(/no content found/i);
 
     // Pagination buttons
-    this.prevButton = page.getByRole('button', { name: /previous/i });
-    this.nextButton = page.getByRole('button', { name: /next/i });
+    this.prevButton = page.getByRole("button", { name: /previous/i });
+    this.nextButton = page.getByRole("button", { name: /next/i });
   }
 
   /**
    * Navigate to Learning page
    */
   async goto(): Promise<void> {
-    await this.page.goto('/learning');
+    await this.page.goto("/learning");
     await this.waitForPageLoad();
   }
 
@@ -68,7 +66,7 @@ export class LearningPage extends BasePage {
     await this.page.waitForFunction(
       () => {
         const hasContent = document.querySelector('ul[role="list"]');
-        const isLoading = document.querySelector('*')?.textContent?.includes('Loading');
+        const isLoading = document.querySelector("*")?.textContent?.includes("Loading");
         return hasContent || !isLoading;
       },
       { timeout: 10000 }
@@ -94,7 +92,7 @@ export class LearningPage extends BasePage {
    */
   async getCardTitle(index: number): Promise<string | null> {
     const card = this.getContentCard(index);
-    const title = card.locator('h3');
+    const title = card.locator("h3");
     return await title.textContent();
   }
 
@@ -103,7 +101,7 @@ export class LearningPage extends BasePage {
    */
   async getCardType(index: number): Promise<string | null> {
     const card = this.getContentCard(index);
-    const badge = card.locator('span').first();
+    const badge = card.locator("span").first();
     return await badge.textContent();
   }
 
@@ -112,14 +110,14 @@ export class LearningPage extends BasePage {
    */
   async openContent(index: number): Promise<void> {
     const card = this.getContentCard(index);
-    const link = card.locator('a');
+    const link = card.locator("a");
     await link.click();
   }
 
   /**
    * Filter by type (all, tutorials, articles)
    */
-  async filterByType(type: 'all' | 'tutorials' | 'articles'): Promise<void> {
+  async filterByType(type: "all" | "tutorials" | "articles"): Promise<void> {
     await this.typeFilterSelect.selectOption(type);
     await this.waitForContentToLoad();
   }

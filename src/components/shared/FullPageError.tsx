@@ -11,11 +11,7 @@ interface FullPageErrorProps {
   onRetry: () => void;
 }
 
-export function FullPageError({
-  title = "Something went wrong",
-  message,
-  onRetry,
-}: FullPageErrorProps) {
+export function FullPageError({ title = "Something went wrong", message, onRetry }: FullPageErrorProps) {
   return (
     <div
       role="alert"
@@ -23,12 +19,7 @@ export function FullPageError({
     >
       <h3 className="text-lg font-semibold text-foreground">{title}</h3>
       <p className="mt-2 text-sm text-muted-foreground">{message}</p>
-      <Button
-        onClick={onRetry}
-        variant="outline"
-        className="mt-4"
-        aria-label="Retry loading content"
-      >
+      <Button onClick={onRetry} variant="outline" className="mt-4" aria-label="Retry loading content">
         Try again
       </Button>
     </div>

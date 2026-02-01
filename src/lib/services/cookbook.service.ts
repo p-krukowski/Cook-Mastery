@@ -40,14 +40,10 @@ export async function listCookbookEntries(
   // Apply sorting with stable tie-breakers for consistent pagination
   if (sort === "newest") {
     // Newest first: sort by created_at descending, then by id descending
-    query = query
-      .order("created_at", { ascending: false })
-      .order("id", { ascending: false });
+    query = query.order("created_at", { ascending: false }).order("id", { ascending: false });
   } else if (sort === "oldest") {
     // Oldest first: sort by created_at ascending, then by id ascending
-    query = query
-      .order("created_at", { ascending: true })
-      .order("id", { ascending: true });
+    query = query.order("created_at", { ascending: true }).order("id", { ascending: true });
   } else if (sort === "title_asc") {
     // Alphabetical by title: sort by title ascending, then created_at descending, then id descending
     query = query
@@ -203,11 +199,7 @@ export async function updateCookbookEntry(
  * @returns Promise resolving to true if deleted, false if not found
  * @throws Error if database delete fails
  */
-export async function deleteCookbookEntry(
-  supabase: SupabaseClient,
-  userId: string,
-  entryId: string
-): Promise<boolean> {
+export async function deleteCookbookEntry(supabase: SupabaseClient, userId: string, entryId: string): Promise<boolean> {
   const { error, count } = await supabase
     .from("cookbook_entries")
     .delete({ count: "exact" })

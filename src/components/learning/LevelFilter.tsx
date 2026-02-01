@@ -13,22 +13,13 @@ interface LevelFilterProps {
   onChange: (next: LearningLevelFilter) => void;
 }
 
-/**
- * Format level for display
- */
-function formatLevel(level: string): string {
-  if (level === "ALL") return "All";
-  return level.charAt(0) + level.slice(1).toLowerCase();
-}
-
 export function LevelFilter({ value, userSelectedLevel, onChange }: LevelFilterProps) {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(event.target.value as LearningLevelFilter);
   };
 
   // Show warning when browsing other levels (not recommended)
-  const showWarning =
-    value !== "ALL" && userSelectedLevel && value !== userSelectedLevel;
+  const showWarning = value !== "ALL" && userSelectedLevel && value !== userSelectedLevel;
 
   return (
     <div className="flex flex-col gap-1.5">
@@ -47,9 +38,7 @@ export function LevelFilter({ value, userSelectedLevel, onChange }: LevelFilterP
         <option value="EXPERIENCED">Experienced</option>
       </select>
       {showWarning && (
-        <p className="text-xs text-amber-600 dark:text-amber-400">
-          Browsing other levels (not recommended)
-        </p>
+        <p className="text-xs text-amber-600 dark:text-amber-400">Browsing other levels (not recommended)</p>
       )}
     </div>
   );

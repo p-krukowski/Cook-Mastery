@@ -7,16 +7,11 @@
  * Requires authentication - returns 401 if user is not logged in.
  */
 
-import type { APIContext } from 'astro';
-import { z } from 'zod';
-import { updateProfile } from '../../lib/services/profile.service';
-import {
-  createErrorResponse,
-  createJsonResponse,
-  formatZodError,
-  logError,
-} from '../../lib/utils/error-handler';
-import type { UpdateProfileCommand, ProfileDTO } from '../../types';
+import type { APIContext } from "astro";
+import { z } from "zod";
+import { updateProfile } from "../../lib/services/profile.service";
+import { createErrorResponse, createJsonResponse, formatZodError, logError } from "../../lib/utils/error-handler";
+import type { UpdateProfileCommand, ProfileDTO } from "../../types";
 
 // Disable prerendering for this API route
 export const prerender = false;
@@ -27,16 +22,13 @@ export const prerender = false;
  */
 const UpdateProfileBodySchema = z
   .object({
-    username: z.string().min(1, 'Username cannot be empty').optional(),
-    selected_level: z.enum(['BEGINNER', 'INTERMEDIATE', 'EXPERIENCED']).optional(),
+    username: z.string().min(1, "Username cannot be empty").optional(),
+    selected_level: z.enum(["BEGINNER", "INTERMEDIATE", "EXPERIENCED"]).optional(),
   })
-  .refine(
-    (data) => data.username !== undefined || data.selected_level !== undefined,
-    {
-      message: 'At least one field must be provided for update',
-      path: ['general'],
-    }
-  );
+  .refine((data) => data.username !== undefined || data.selected_level !== undefined, {
+    message: "At least one field must be provided for update",
+    path: ["general"],
+  });
 
 /**
  * PATCH handler for updating user profile
@@ -63,10 +55,7 @@ export async function PATCH(context: APIContext): Promise<Response> {
 
     // Return 401 if authentication fails or user is missing
     if (authError || !user) {
-      return createJsonResponse(
-        createErrorResponse('UNAUTHORIZED', 'Authentication required to update profile'),
-        401
-      );
+      return createJsonResponse(createErrorResponse("UNAUTHORIZED", "Authentication required to update profile"), 401);
     }
 
     // Parse and validate request body
@@ -74,10 +63,7 @@ export async function PATCH(context: APIContext): Promise<Response> {
     try {
       requestBody = await context.request.json();
     } catch {
-      return createJsonResponse(
-        createErrorResponse('VALIDATION_ERROR', 'Invalid JSON in request body'),
-        400
-      );
+      return createJsonResponse(createErrorResponse("VALIDATION_ERROR", "Invalid JSON in request body"), 400);
     }
 
     const validationResult = UpdateProfileBodySchema.safeParse(requestBody);
@@ -95,19 +81,19 @@ export async function PATCH(context: APIContext): Promise<Response> {
     return new Response(JSON.stringify(updatedProfile), {
       status: 200,
       headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'private, no-cache',
+        "Content-Type": "application/json",
+        "Cache-Control": "private, no-cache",
       },
     });
   } catch (error: unknown) {
     // Handle service-level errors (thrown as ApiErrorResponse)
     if (
       error &&
-      typeof error === 'object' &&
-      'error' in error &&
-      typeof error.error === 'object' &&
+      typeof error === "object" &&
+      "error" in error &&
+      typeof error.error === "object" &&
       error.error !== null &&
-      'code' in error.error
+      "code" in error.error
     ) {
       const apiError = error as { error: { code: string; message: string } };
       const statusMap: Record<string, number> = {
@@ -123,12 +109,9 @@ export async function PATCH(context: APIContext): Promise<Response> {
     }
 
     // Log unexpected errors
-    logError('PATCH /api/profile', error, { userId: context.locals.user?.id });
+    logError("PATCH /api/profile", error, { userId: context.locals.user?.id });
 
     // Return generic 500 error
-    return createJsonResponse(
-      createErrorResponse('INTERNAL_SERVER_ERROR', 'An unexpected error occurred'),
-      500
-    );
+    return createJsonResponse(createErrorResponse("INTERNAL_SERVER_ERROR", "An unexpected error occurred"), 500);
   }
 }

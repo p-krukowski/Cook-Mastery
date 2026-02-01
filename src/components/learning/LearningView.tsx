@@ -30,24 +30,13 @@ export default function LearningView({
 }: LearningViewProps) {
   const headingId = useId();
 
-  const {
-    type,
-    level,
-    items,
-    pagination,
-    isLoading,
-    error,
-    setType,
-    setLevel,
-    goPrev,
-    goNext,
-    retry,
-  } = useLearningFeed({
-    isAuthenticated,
-    userSelectedLevel,
-    initialLevelFilter,
-    initialTypeFilter,
-  });
+  const { type, level, items, pagination, isLoading, error, setType, setLevel, goPrev, goNext, retry } =
+    useLearningFeed({
+      isAuthenticated,
+      userSelectedLevel,
+      initialLevelFilter,
+      initialTypeFilter,
+    });
 
   return (
     <section aria-labelledby={headingId} className="w-full">
@@ -74,11 +63,7 @@ export default function LearningView({
         {isLoading && <LoadingState count={10} />}
 
         {!isLoading && error && (
-          <FullPageError
-            title="Failed to load content"
-            message={error.message}
-            onRetry={retry}
-          />
+          <FullPageError title="Failed to load content" message={error.message} onRetry={retry} />
         )}
 
         {!isLoading && !error && items.length === 0 && (
@@ -89,7 +74,7 @@ export default function LearningView({
         )}
 
         {!isLoading && !error && items.length > 0 && (
-          <ul role="list" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((item) => (
               <ContentCard key={`${item.type}-${item.id}`} item={item} />
             ))}

@@ -3,7 +3,7 @@
  * View-scoped ViewModels for rendering logic
  */
 
-import type { DifficultyLevel } from '../../types';
+import type { DifficultyLevel } from "../../types";
 
 /**
  * View model for level settings card

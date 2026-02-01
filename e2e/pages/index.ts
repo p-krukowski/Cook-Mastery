@@ -4,7 +4,7 @@
  */
 
 // Base
-export { BasePage } from './BasePage';
+export { BasePage } from "./BasePage";
 
 // Pages
-export { LearningPage } from './LearningPage';
+export { LearningPage } from "./LearningPage";

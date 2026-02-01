@@ -61,10 +61,7 @@ function isCreatedWithinDays(createdAt: string, days: number): boolean {
 /**
  * Helper: Map tutorial DTO to view model
  */
-function mapTutorialToVM(
-  dto: TutorialListItemDTO,
-  isAuthenticated: boolean
-): ContentCardItemVM {
+function mapTutorialToVM(dto: TutorialListItemDTO, isAuthenticated: boolean): ContentCardItemVM {
   return {
     type: "tutorial",
     id: dto.id,
@@ -83,10 +80,7 @@ function mapTutorialToVM(
 /**
  * Helper: Map article DTO to view model
  */
-function mapArticleToVM(
-  dto: ArticleListItemDTO,
-  isAuthenticated: boolean
-): ContentCardItemVM {
+function mapArticleToVM(dto: ArticleListItemDTO, isAuthenticated: boolean): ContentCardItemVM {
   return {
     type: "article",
     id: dto.id,
@@ -151,8 +145,7 @@ function buildQueryParams(
  * Custom hook for fetching and managing Learning feed
  */
 export function useLearningFeed(options: UseLearningFeedOptions): UseLearningFeedReturn {
-  const { isAuthenticated, userSelectedLevel, initialLevelFilter, initialTypeFilter = "all" } =
-    options;
+  const { isAuthenticated, initialLevelFilter, initialTypeFilter = "all" } = options;
 
   // Filter state
   const [type, setTypeState] = useState<LearningTypeFilter>(initialTypeFilter);
@@ -235,12 +228,8 @@ export function useLearningFeed(options: UseLearningFeedOptions): UseLearningFee
         ]);
 
         // Map to view models
-        const tutorialItems = tutorialsData.tutorials.map((dto) =>
-          mapTutorialToVM(dto, isAuthenticated)
-        );
-        const articleItems = articlesData.articles.map((dto) =>
-          mapArticleToVM(dto, isAuthenticated)
-        );
+        const tutorialItems = tutorialsData.tutorials.map((dto) => mapTutorialToVM(dto, isAuthenticated));
+        const articleItems = articlesData.articles.map((dto) => mapArticleToVM(dto, isAuthenticated));
 
         // Merge and sort by createdAt desc
         const combined = [...tutorialItems, ...articleItems].sort((a, b) => {
@@ -251,8 +240,7 @@ export function useLearningFeed(options: UseLearningFeedOptions): UseLearningFee
         const displayItems = combined.slice(0, 10);
 
         // Compute combined pagination
-        const combinedTotalItems =
-          tutorialsData.pagination.total_items + articlesData.pagination.total_items;
+        const combinedTotalItems = tutorialsData.pagination.total_items + articlesData.pagination.total_items;
         const combinedPageSize = 10;
         const combinedTotalPages = Math.ceil(combinedTotalItems / combinedPageSize);
 
@@ -313,7 +301,7 @@ export function useLearningFeed(options: UseLearningFeedOptions): UseLearningFee
     } finally {
       setIsLoading(false);
     }
-  }, [type, level, page, isAuthenticated, fetchTutorials, fetchArticles]);
+  }, [type, page, isAuthenticated, fetchTutorials, fetchArticles]);
 
   /**
    * Set type filter and reset to page 1

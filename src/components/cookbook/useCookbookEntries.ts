@@ -3,14 +3,10 @@
  * Handles pagination, sorting, and error states
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import type { ListCookbookEntriesResponseDTO, ApiErrorResponse } from '@/types';
-import { toListVM } from './cookbook.types';
-import type {
-  CookbookListVM,
-  CookbookListErrorVM,
-  CookbookSort,
-} from './cookbook.types';
+import { useState, useEffect, useCallback, useRef } from "react";
+import type { ListCookbookEntriesResponseDTO, ApiErrorResponse } from "@/types";
+import { toListVM } from "./cookbook.types";
+import type { CookbookListVM, CookbookListErrorVM, CookbookSort } from "./cookbook.types";
 
 interface UseCookbookEntriesParams {
   sort?: CookbookSort;
@@ -35,14 +31,14 @@ async function parseApiError(response: Response): Promise<CookbookListErrorVM> {
   try {
     const data = (await response.json()) as ApiErrorResponse;
     return {
-      kind: 'http',
+      kind: "http",
       status: response.status,
       message: data.error.message,
       api: data,
     };
   } catch {
     return {
-      kind: 'http',
+      kind: "http",
       status: response.status,
       message: `Request failed with status ${response.status}`,
     };
@@ -50,7 +46,7 @@ async function parseApiError(response: Response): Promise<CookbookListErrorVM> {
 }
 
 export default function useCookbookEntries({
-  sort = 'newest',
+  sort = "newest",
   page = 1,
   limit = 20,
 }: UseCookbookEntriesParams = {}): UseCookbookEntriesResult {
@@ -91,7 +87,7 @@ export default function useCookbookEntries({
 
       // Handle 401 - session expired
       if (response.status === 401) {
-        window.location.href = '/login';
+        window.location.href = "/login";
         return;
       }
 
@@ -110,14 +106,14 @@ export default function useCookbookEntries({
       setError(null);
     } catch (err) {
       // Handle abort and network errors
-      if (err instanceof Error && err.name === 'AbortError') {
+      if (err instanceof Error && err.name === "AbortError") {
         // Request was cancelled, ignore
         return;
       }
 
       // Network error
       setError({
-        kind: 'network',
+        kind: "network",
         message: "Couldn't load cookbook entries. Check your connection.",
       });
       setData(null);

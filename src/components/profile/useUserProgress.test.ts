@@ -3,10 +3,10 @@
  * Tests business rules, edge cases, and error handling
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { renderHook, waitFor } from '@testing-library/react';
-import type { UserProgressSummaryDTO, ApiErrorResponse } from '../../types';
-import { useUserProgress } from './useUserProgress';
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { renderHook, waitFor } from "@testing-library/react";
+import type { UserProgressSummaryDTO, ApiErrorResponse } from "../../types";
+import { useUserProgress } from "./useUserProgress";
 
 // Mock fetch globally
 const mockFetch = vi.fn();
@@ -14,27 +14,28 @@ global.fetch = mockFetch;
 
 // Mock window.location
 const originalLocation = window.location;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (window as any).location;
-window.location = { ...originalLocation, href: '' } as Location;
+window.location = { ...originalLocation, href: "" } as Location;
 
-describe('useUserProgress', () => {
+describe("useUserProgress", () => {
   beforeEach(() => {
     mockFetch.mockClear();
-    window.location.href = '';
+    window.location.href = "";
   });
 
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  describe('transformToProgressVM', () => {
-    it('should transform valid summary to progress VM', async () => {
+  describe("transformToProgressVM", () => {
+    it("should transform valid summary to progress VM", async () => {
       const mockSummary: UserProgressSummaryDTO = {
-        user_id: 'user-123',
-        selected_level: 'BEGINNER',
+        user_id: "user-123",
+        selected_level: "BEGINNER",
         level_progress: [
           {
-            level: 'BEGINNER',
+            level: "BEGINNER",
             total_count: 10,
             completed_count: 5,
             completion_percent: 50,
@@ -57,7 +58,7 @@ describe('useUserProgress', () => {
       });
 
       expect(result.current.data).toEqual({
-        selectedLevel: 'BEGINNER',
+        selectedLevel: "BEGINNER",
         completionPercent: 50,
         isUpToDate: false,
         isEligibleToAdvance: false,
@@ -67,13 +68,13 @@ describe('useUserProgress', () => {
       });
     });
 
-    it('should set emptyState to true when total count is zero', async () => {
+    it("should set emptyState to true when total count is zero", async () => {
       const mockSummary: UserProgressSummaryDTO = {
-        user_id: 'user-123',
-        selected_level: 'BEGINNER',
+        user_id: "user-123",
+        selected_level: "BEGINNER",
         level_progress: [
           {
-            level: 'BEGINNER',
+            level: "BEGINNER",
             total_count: 0,
             completed_count: 0,
             completion_percent: 0,
@@ -100,13 +101,13 @@ describe('useUserProgress', () => {
       expect(result.current.data?.completedCount).toBe(0);
     });
 
-    it('should return null when no matching level progress found', async () => {
+    it("should return null when no matching level progress found", async () => {
       const mockSummary: UserProgressSummaryDTO = {
-        user_id: 'user-123',
-        selected_level: 'INTERMEDIATE',
+        user_id: "user-123",
+        selected_level: "INTERMEDIATE",
         level_progress: [
           {
-            level: 'BEGINNER',
+            level: "BEGINNER",
             total_count: 10,
             completed_count: 5,
             completion_percent: 50,
@@ -131,13 +132,13 @@ describe('useUserProgress', () => {
       expect(result.current.data).toBeNull();
     });
 
-    it('should correctly map all DTO fields to VM fields', async () => {
+    it("should correctly map all DTO fields to VM fields", async () => {
       const mockSummary: UserProgressSummaryDTO = {
-        user_id: 'user-123',
-        selected_level: 'EXPERIENCED',
+        user_id: "user-123",
+        selected_level: "EXPERIENCED",
         level_progress: [
           {
-            level: 'EXPERIENCED',
+            level: "EXPERIENCED",
             total_count: 20,
             completed_count: 18,
             completion_percent: 90,
@@ -160,7 +161,7 @@ describe('useUserProgress', () => {
       });
 
       expect(result.current.data).toEqual({
-        selectedLevel: 'EXPERIENCED',
+        selectedLevel: "EXPERIENCED",
         completionPercent: 90,
         isUpToDate: true,
         isEligibleToAdvance: false,
@@ -171,8 +172,8 @@ describe('useUserProgress', () => {
     });
   });
 
-  describe('hook initialization', () => {
-    it('should start with loading state when no initial data provided', () => {
+  describe("hook initialization", () => {
+    it("should start with loading state when no initial data provided", () => {
       mockFetch.mockImplementation(
         () =>
           new Promise(() => {
@@ -187,13 +188,13 @@ describe('useUserProgress', () => {
       expect(result.current.error).toBeNull();
     });
 
-    it('should use initial data and skip loading state', async () => {
+    it("should use initial data and skip loading state", async () => {
       const initialData: UserProgressSummaryDTO = {
-        user_id: 'user-123',
-        selected_level: 'BEGINNER',
+        user_id: "user-123",
+        selected_level: "BEGINNER",
         level_progress: [
           {
-            level: 'BEGINNER',
+            level: "BEGINNER",
             total_count: 10,
             completed_count: 5,
             completion_percent: 50,
@@ -210,13 +211,11 @@ describe('useUserProgress', () => {
         json: async () => initialData,
       });
 
-      const { result } = renderHook(() =>
-        useUserProgress({ initialData })
-      );
+      const { result } = renderHook(() => useUserProgress({ initialData }));
 
       // Initial data should be set immediately
       expect(result.current.data).toEqual({
-        selectedLevel: 'BEGINNER',
+        selectedLevel: "BEGINNER",
         completionPercent: 50,
         isUpToDate: false,
         isEligibleToAdvance: false,
@@ -234,10 +233,8 @@ describe('useUserProgress', () => {
       expect(mockFetch).toHaveBeenCalledTimes(1);
     });
 
-    it('should not fetch when disabled', async () => {
-      const { result } = renderHook(() =>
-        useUserProgress({ enabled: false })
-      );
+    it("should not fetch when disabled", async () => {
+      const { result } = renderHook(() => useUserProgress({ enabled: false }));
 
       expect(result.current.isLoading).toBe(false);
       expect(result.current.data).toBeNull();
@@ -245,12 +242,12 @@ describe('useUserProgress', () => {
     });
   });
 
-  describe('API error handling', () => {
-    it('should redirect to login on 401 unauthorized', async () => {
+  describe("API error handling", () => {
+    it("should redirect to login on 401 unauthorized", async () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 401,
-        json: async () => ({ error: { code: 'UNAUTHORIZED', message: 'Unauthorized' } }),
+        json: async () => ({ error: { code: "UNAUTHORIZED", message: "Unauthorized" } }),
       });
 
       const { result } = renderHook(() => useUserProgress());
@@ -259,16 +256,16 @@ describe('useUserProgress', () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(window.location.href).toBe('/login');
+      expect(window.location.href).toBe("/login");
       expect(result.current.error).toBeNull();
       expect(result.current.data).toBeNull();
     });
 
-    it('should set error message on 400 bad request', async () => {
+    it("should set error message on 400 bad request", async () => {
       const errorResponse: ApiErrorResponse = {
         error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Invalid request parameters',
+          code: "VALIDATION_ERROR",
+          message: "Invalid request parameters",
         },
       };
 
@@ -284,15 +281,15 @@ describe('useUserProgress', () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(result.current.error).toBe('Invalid request parameters');
+      expect(result.current.error).toBe("Invalid request parameters");
       expect(result.current.data).toBeNull();
     });
 
-    it('should set error message on 500 internal server error', async () => {
+    it("should set error message on 500 internal server error", async () => {
       const errorResponse: ApiErrorResponse = {
         error: {
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Something went wrong',
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong",
         },
       };
 
@@ -308,15 +305,15 @@ describe('useUserProgress', () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(result.current.error).toBe('Something went wrong');
+      expect(result.current.error).toBe("Something went wrong");
       expect(result.current.data).toBeNull();
     });
 
-    it('should use fallback message when error message is missing', async () => {
+    it("should use fallback message when error message is missing", async () => {
       const errorResponse: ApiErrorResponse = {
         error: {
-          code: 'INTERNAL_SERVER_ERROR',
-          message: '',
+          code: "INTERNAL_SERVER_ERROR",
+          message: "",
         },
       };
 
@@ -332,11 +329,11 @@ describe('useUserProgress', () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(result.current.error).toBe('Failed to load progress');
+      expect(result.current.error).toBe("Failed to load progress");
     });
 
-    it('should handle network errors', async () => {
-      mockFetch.mockRejectedValueOnce(new Error('Network error'));
+    it("should handle network errors", async () => {
+      mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
       const { result } = renderHook(() => useUserProgress());
 
@@ -344,14 +341,12 @@ describe('useUserProgress', () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(result.current.error).toBe(
-        "Couldn't load progress. Check your connection."
-      );
+      expect(result.current.error).toBe("Couldn't load progress. Check your connection.");
       expect(result.current.data).toBeNull();
     });
 
-    it('should handle fetch timeout', async () => {
-      mockFetch.mockRejectedValueOnce(new Error('Request timeout'));
+    it("should handle fetch timeout", async () => {
+      mockFetch.mockRejectedValueOnce(new Error("Request timeout"));
 
       const { result } = renderHook(() => useUserProgress());
 
@@ -359,20 +354,18 @@ describe('useUserProgress', () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(result.current.error).toBe(
-        "Couldn't load progress. Check your connection."
-      );
+      expect(result.current.error).toBe("Couldn't load progress. Check your connection.");
     });
   });
 
-  describe('retry functionality', () => {
-    it('should retry after error', async () => {
+  describe("retry functionality", () => {
+    it("should retry after error", async () => {
       const mockSummary: UserProgressSummaryDTO = {
-        user_id: 'user-123',
-        selected_level: 'BEGINNER',
+        user_id: "user-123",
+        selected_level: "BEGINNER",
         level_progress: [
           {
-            level: 'BEGINNER',
+            level: "BEGINNER",
             total_count: 10,
             completed_count: 5,
             completion_percent: 50,
@@ -383,7 +376,7 @@ describe('useUserProgress', () => {
       };
 
       // First call fails
-      mockFetch.mockRejectedValueOnce(new Error('Network error'));
+      mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
       const { result } = renderHook(() => useUserProgress());
 
@@ -391,9 +384,7 @@ describe('useUserProgress', () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(result.current.error).toBe(
-        "Couldn't load progress. Check your connection."
-      );
+      expect(result.current.error).toBe("Couldn't load progress. Check your connection.");
 
       // Second call succeeds
       mockFetch.mockResolvedValueOnce({
@@ -414,8 +405,8 @@ describe('useUserProgress', () => {
       expect(result.current.data?.completionPercent).toBe(50);
     });
 
-    it('should clear error on retry', async () => {
-      mockFetch.mockRejectedValueOnce(new Error('Network error'));
+    it("should clear error on retry", async () => {
+      mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
       const { result } = renderHook(() => useUserProgress());
 
@@ -424,19 +415,17 @@ describe('useUserProgress', () => {
       });
 
       const errorBeforeRetry = result.current.error;
-      expect(errorBeforeRetry).toBe(
-        "Couldn't load progress. Check your connection."
-      );
+      expect(errorBeforeRetry).toBe("Couldn't load progress. Check your connection.");
 
       mockFetch.mockResolvedValueOnce({
         ok: true,
         status: 200,
         json: async () => ({
-          user_id: 'user-123',
-          selected_level: 'BEGINNER',
+          user_id: "user-123",
+          selected_level: "BEGINNER",
           level_progress: [
             {
-              level: 'BEGINNER',
+              level: "BEGINNER",
               total_count: 10,
               completed_count: 5,
               completion_percent: 50,
@@ -457,13 +446,13 @@ describe('useUserProgress', () => {
       expect(result.current.data).not.toBeNull();
     });
 
-    it('should handle multiple retry calls', async () => {
+    it("should handle multiple retry calls", async () => {
       const mockSummary: UserProgressSummaryDTO = {
-        user_id: 'user-123',
-        selected_level: 'BEGINNER',
+        user_id: "user-123",
+        selected_level: "BEGINNER",
         level_progress: [
           {
-            level: 'BEGINNER',
+            level: "BEGINNER",
             total_count: 10,
             completed_count: 5,
             completion_percent: 50,
@@ -503,11 +492,11 @@ describe('useUserProgress', () => {
     });
   });
 
-  describe('edge cases', () => {
-    it('should handle empty level_progress array', async () => {
+  describe("edge cases", () => {
+    it("should handle empty level_progress array", async () => {
       const mockSummary: UserProgressSummaryDTO = {
-        user_id: 'user-123',
-        selected_level: 'BEGINNER',
+        user_id: "user-123",
+        selected_level: "BEGINNER",
         level_progress: [],
         can_advance: false,
       };
@@ -527,27 +516,27 @@ describe('useUserProgress', () => {
       expect(result.current.data).toBeNull();
     });
 
-    it('should handle multiple levels with correct selected level', async () => {
+    it("should handle multiple levels with correct selected level", async () => {
       const mockSummary: UserProgressSummaryDTO = {
-        user_id: 'user-123',
-        selected_level: 'INTERMEDIATE',
+        user_id: "user-123",
+        selected_level: "INTERMEDIATE",
         level_progress: [
           {
-            level: 'BEGINNER',
+            level: "BEGINNER",
             total_count: 10,
             completed_count: 10,
             completion_percent: 100,
             is_up_to_date: true,
           },
           {
-            level: 'INTERMEDIATE',
+            level: "INTERMEDIATE",
             total_count: 15,
             completed_count: 7,
             completion_percent: 47,
             is_up_to_date: false,
           },
           {
-            level: 'EXPERIENCED',
+            level: "EXPERIENCED",
             total_count: 20,
             completed_count: 0,
             completion_percent: 0,
@@ -569,19 +558,19 @@ describe('useUserProgress', () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(result.current.data?.selectedLevel).toBe('INTERMEDIATE');
+      expect(result.current.data?.selectedLevel).toBe("INTERMEDIATE");
       expect(result.current.data?.completionPercent).toBe(47);
       expect(result.current.data?.totalCount).toBe(15);
       expect(result.current.data?.completedCount).toBe(7);
     });
 
-    it('should handle 100% completion', async () => {
+    it("should handle 100% completion", async () => {
       const mockSummary: UserProgressSummaryDTO = {
-        user_id: 'user-123',
-        selected_level: 'BEGINNER',
+        user_id: "user-123",
+        selected_level: "BEGINNER",
         level_progress: [
           {
-            level: 'BEGINNER',
+            level: "BEGINNER",
             total_count: 10,
             completed_count: 10,
             completion_percent: 100,
@@ -608,11 +597,10 @@ describe('useUserProgress', () => {
       expect(result.current.data?.isEligibleToAdvance).toBe(true);
     });
 
-    it('should not fetch when re-enabled from disabled state', async () => {
-      const { rerender } = renderHook(
-        ({ enabled }) => useUserProgress({ enabled }),
-        { initialProps: { enabled: false } }
-      );
+    it("should not fetch when re-enabled from disabled state", async () => {
+      const { rerender } = renderHook(({ enabled }) => useUserProgress({ enabled }), {
+        initialProps: { enabled: false },
+      });
 
       expect(mockFetch).not.toHaveBeenCalled();
 
@@ -621,11 +609,11 @@ describe('useUserProgress', () => {
         ok: true,
         status: 200,
         json: async () => ({
-          user_id: 'user-123',
-          selected_level: 'BEGINNER',
+          user_id: "user-123",
+          selected_level: "BEGINNER",
           level_progress: [
             {
-              level: 'BEGINNER',
+              level: "BEGINNER",
               total_count: 10,
               completed_count: 5,
               completion_percent: 50,
@@ -644,14 +632,14 @@ describe('useUserProgress', () => {
     });
   });
 
-  describe('API integration', () => {
-    it('should call correct API endpoint', async () => {
+  describe("API integration", () => {
+    it("should call correct API endpoint", async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
         status: 200,
         json: async () => ({
-          user_id: 'user-123',
-          selected_level: 'BEGINNER',
+          user_id: "user-123",
+          selected_level: "BEGINNER",
           level_progress: [],
           can_advance: false,
         }),
@@ -660,11 +648,12 @@ describe('useUserProgress', () => {
       renderHook(() => useUserProgress());
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith('/api/progress/summary');
+        expect(mockFetch).toHaveBeenCalledWith("/api/progress/summary");
       });
     });
 
-    it('should maintain loading state during fetch', async () => {
+    it("should maintain loading state during fetch", async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let resolvePromise: (value: any) => void;
       const promise = new Promise((resolve) => {
         resolvePromise = resolve;
@@ -678,15 +667,16 @@ describe('useUserProgress', () => {
       expect(result.current.data).toBeNull();
       expect(result.current.error).toBeNull();
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       resolvePromise!({
         ok: true,
         status: 200,
         json: async () => ({
-          user_id: 'user-123',
-          selected_level: 'BEGINNER',
+          user_id: "user-123",
+          selected_level: "BEGINNER",
           level_progress: [
             {
-              level: 'BEGINNER',
+              level: "BEGINNER",
               total_count: 10,
               completed_count: 5,
               completion_percent: 50,

@@ -5,7 +5,7 @@ import { AuthFormSignup } from "../components/auth/AuthFormSignup";
 // Redirect authenticated users to home page
 // This is a backup to middleware protection
 if (Astro.locals.user) {
-  return Astro.redirect('/');
+  return Astro.redirect("/");
 }
 ---
 

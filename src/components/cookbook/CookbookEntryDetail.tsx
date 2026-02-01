@@ -3,16 +3,12 @@
  * Renders view mode (read-only) or edit mode (form)
  */
 
-import CookbookEntryForm from './CookbookEntryForm';
-import type {
-  CookbookEntryDetailVM,
-  CookbookEntryFormVM,
-  CookbookEntryFormErrorsVM,
-} from './cookbook.types';
+import CookbookEntryForm from "./CookbookEntryForm";
+import type { CookbookEntryDetailVM, CookbookEntryFormVM, CookbookEntryFormErrorsVM } from "./cookbook.types";
 
 interface CookbookEntryDetailProps {
   entry: CookbookEntryDetailVM;
-  mode: 'view' | 'edit';
+  mode: "view" | "edit";
   form: CookbookEntryFormVM;
   errors: CookbookEntryFormErrorsVM;
   isSubmitting: boolean;
@@ -47,7 +43,7 @@ export default function CookbookEntryDetail({
           </div>
         </div>
         <div className="flex gap-2">
-          {mode === 'view' ? (
+          {mode === "view" ? (
             <>
               <a
                 href={entry.url}
@@ -87,7 +83,7 @@ export default function CookbookEntryDetail({
                 disabled={isSubmitting}
                 className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
               >
-                {isSubmitting ? 'Saving...' : 'Save'}
+                {isSubmitting ? "Saving..." : "Save"}
               </button>
               <button
                 onClick={onCancel}
@@ -103,7 +99,7 @@ export default function CookbookEntryDetail({
 
       {/* Content */}
       <div className="rounded-lg border border-border bg-card p-6">
-        {mode === 'view' ? (
+        {mode === "view" ? (
           <div className="space-y-6">
             {/* URL section */}
             <div>

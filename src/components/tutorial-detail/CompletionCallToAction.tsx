@@ -7,10 +7,7 @@
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
-import type {
-  CompletionCallToActionProps,
-  CompletionCTAStateVM,
-} from "./tutorial-detail.types";
+import type { CompletionCallToActionProps, CompletionCTAStateVM } from "./tutorial-detail.types";
 import type { CompleteTutorialResponseDTO, ApiErrorResponse } from "../../types";
 
 export function CompletionCallToAction({
@@ -117,7 +114,7 @@ export function CompletionCallToAction({
 
       // Show success toast (optional but recommended)
       toast.success("Marked as passed");
-    } catch (err) {
+    } catch {
       // Network error
       const errorMessage = "Network error. Please check your connection.";
       setState({
@@ -129,34 +126,18 @@ export function CompletionCallToAction({
   }, [tutorialId, isCompleted, onCompleted]);
 
   return (
-    <section
-      aria-label="Completion"
-      className="mt-8 space-y-4 rounded-lg border border-border bg-card p-6"
-    >
+    <section aria-label="Completion" className="mt-8 space-y-4 rounded-lg border border-border bg-card p-6">
       {/* Status callout */}
       {isCompleted ? (
         // Completed state
         <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M5 13l4 4L19 7"
-            />
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
           <div>
             <p className="font-semibold">Passed</p>
             {completedAt && (
-              <p className="text-sm text-muted-foreground">
-                Completed on {formatCompletedDate(completedAt)}
-              </p>
+              <p className="text-sm text-muted-foreground">Completed on {formatCompletedDate(completedAt)}</p>
             )}
           </div>
         </div>
@@ -164,7 +145,7 @@ export function CompletionCallToAction({
         // Not completed state
         <div className="space-y-2">
           <p className="text-sm text-foreground">
-            Ready to practice? Mark this tutorial as passed once you've completed it.
+            Ready to practice? Mark this tutorial as passed once you&apos;ve completed it.
           </p>
         </div>
       )}
@@ -177,11 +158,7 @@ export function CompletionCallToAction({
           className="w-full sm:w-auto"
           aria-label={isCompleted ? "Already marked as passed" : "Mark as passed"}
         >
-          {state.isSubmitting
-            ? "Marking..."
-            : isCompleted
-              ? "Passed"
-              : "Mark as passed"}
+          {state.isSubmitting ? "Marking..." : isCompleted ? "Passed" : "Mark as passed"}
         </Button>
 
         {/* Inline error message */}

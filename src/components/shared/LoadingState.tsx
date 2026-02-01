@@ -9,9 +9,9 @@ interface LoadingStateProps {
 
 export function LoadingState({ count = 5 }: LoadingStateProps) {
   return (
-    <div 
-      aria-busy="true" 
-      aria-live="polite" 
+    <div
+      aria-busy="true"
+      aria-live="polite"
       className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
       suppressHydrationWarning
     >
@@ -25,14 +25,14 @@ export function LoadingState({ count = 5 }: LoadingStateProps) {
         >
           {/* Badge skeleton */}
           <div className="mb-3 h-5 w-20 rounded bg-muted" suppressHydrationWarning />
-          
+
           {/* Title skeleton */}
           <div className="mb-2 h-6 w-3/4 rounded bg-muted" suppressHydrationWarning />
-          
+
           {/* Summary skeleton */}
           <div className="mb-1 h-4 w-full rounded bg-muted" suppressHydrationWarning />
           <div className="mb-3 h-4 w-5/6 rounded bg-muted" suppressHydrationWarning />
-          
+
           {/* Metadata skeleton */}
           <div className="flex items-center gap-2" suppressHydrationWarning>
             <div className="h-4 w-24 rounded bg-muted" suppressHydrationWarning />

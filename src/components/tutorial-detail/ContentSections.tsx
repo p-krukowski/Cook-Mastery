@@ -25,9 +25,7 @@ export function ContentSections({ sections }: ContentSectionsProps) {
         <h2 id={summaryId} className="text-2xl font-semibold text-foreground">
           Summary
         </h2>
-        <p className="whitespace-pre-wrap text-base leading-relaxed text-foreground">
-          {sections.summary}
-        </p>
+        <p className="whitespace-pre-wrap text-base leading-relaxed text-foreground">{sections.summary}</p>
       </section>
 
       {/* Section 2: Content */}
@@ -36,9 +34,7 @@ export function ContentSections({ sections }: ContentSectionsProps) {
           Content
         </h2>
         <div className="prose prose-sm max-w-none dark:prose-invert">
-          <p className="whitespace-pre-wrap text-base leading-relaxed text-foreground">
-            {sections.content}
-          </p>
+          <p className="whitespace-pre-wrap text-base leading-relaxed text-foreground">{sections.content}</p>
         </div>
       </section>
 
@@ -58,17 +54,13 @@ export function ContentSections({ sections }: ContentSectionsProps) {
                 >
                   {index + 1}
                 </span>
-                
+
                 <div className="space-y-2">
                   {/* Step title */}
-                  <h3 className="text-lg font-semibold text-foreground">
-                    {step.title}
-                  </h3>
-                  
+                  <h3 className="text-lg font-semibold text-foreground">{step.title}</h3>
+
                   {/* Step content */}
-                  <div className="whitespace-pre-wrap text-base leading-relaxed text-foreground">
-                    {step.content}
-                  </div>
+                  <div className="whitespace-pre-wrap text-base leading-relaxed text-foreground">{step.content}</div>
                 </div>
               </li>
             ))}
@@ -82,9 +74,7 @@ export function ContentSections({ sections }: ContentSectionsProps) {
           <h2 id={stepsId} className="text-2xl font-semibold text-foreground">
             Steps
           </h2>
-          <p className="text-sm text-muted-foreground">
-            No specific steps for this tutorial.
-          </p>
+          <p className="text-sm text-muted-foreground">No specific steps for this tutorial.</p>
         </section>
       )}
 
@@ -99,16 +89,11 @@ export function ContentSections({ sections }: ContentSectionsProps) {
       </section>
 
       {/* Section 5: Key Takeaways */}
-      <section
-        aria-labelledby={takeawaysId}
-        className="space-y-3 rounded-lg border border-primary/20 bg-primary/5 p-6"
-      >
+      <section aria-labelledby={takeawaysId} className="space-y-3 rounded-lg border border-primary/20 bg-primary/5 p-6">
         <h2 id={takeawaysId} className="text-2xl font-semibold text-foreground">
           Key Takeaways
         </h2>
-        <div className="whitespace-pre-wrap text-base leading-relaxed text-foreground">
-          {sections.keyTakeaways}
-        </div>
+        <div className="whitespace-pre-wrap text-base leading-relaxed text-foreground">{sections.keyTakeaways}</div>
       </section>
     </div>
   );

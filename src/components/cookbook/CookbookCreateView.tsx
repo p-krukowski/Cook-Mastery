@@ -3,18 +3,19 @@
  * Manages form state and submission for POST /api/cookbook
  */
 
-import { useState } from 'react';
-import { toast } from 'sonner';
-import CookbookEntryForm from './CookbookEntryForm';
-import { createEmptyForm, isValidUrl } from './cookbook.types';
-import type { CookbookEntryFormVM, CookbookEntryFormErrorsVM } from './cookbook.types';
-import type { CreateCookbookEntryCommand, ApiErrorResponse } from '@/types';
+import { useState } from "react";
+import { toast } from "sonner";
+import CookbookEntryForm from "./CookbookEntryForm";
+import { createEmptyForm, isValidUrl } from "./cookbook.types";
+import type { CookbookEntryFormVM, CookbookEntryFormErrorsVM } from "./cookbook.types";
+import type { CreateCookbookEntryCommand, ApiErrorResponse } from "@/types";
 
 interface CookbookCreateViewProps {
   isAuthenticated: boolean;
 }
 
-export default function CookbookCreateView({ isAuthenticated }: CookbookCreateViewProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function CookbookCreateView(_props: CookbookCreateViewProps) {
   const [form, setForm] = useState<CookbookEntryFormVM>(createEmptyForm());
   const [errors, setErrors] = useState<CookbookEntryFormErrorsVM>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,14 +28,14 @@ export default function CookbookCreateView({ isAuthenticated }: CookbookCreateVi
 
     // URL validation
     if (!form.url.trim()) {
-      newErrors.url = 'Recipe URL is required';
+      newErrors.url = "Recipe URL is required";
     } else if (!isValidUrl(form.url)) {
-      newErrors.url = 'Please enter a valid URL starting with http:// or https://';
+      newErrors.url = "Please enter a valid URL starting with http:// or https://";
     }
 
     // Title validation
     if (!form.title.trim()) {
-      newErrors.title = 'Title is required';
+      newErrors.title = "Title is required";
     }
 
     setErrors(newErrors);
@@ -79,15 +80,15 @@ export default function CookbookCreateView({ isAuthenticated }: CookbookCreateVi
         notes: form.notes.trim() || undefined,
       };
 
-      const response = await fetch('/api/cookbook', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/cookbook", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(command),
       });
 
       // Handle 401 - session expired
       if (response.status === 401) {
-        window.location.href = '/login';
+        window.location.href = "/login";
         return;
       }
 
@@ -122,15 +123,15 @@ export default function CookbookCreateView({ isAuthenticated }: CookbookCreateVi
       // Handle other errors
       if (!response.ok) {
         const errorData = (await response.json()) as ApiErrorResponse;
-        toast.error(errorData.error.message || 'Failed to save entry');
+        toast.error(errorData.error.message || "Failed to save entry");
         return;
       }
 
       // Success
       const data = await response.json();
-      toast.success('Cookbook entry saved');
+      toast.success("Cookbook entry saved");
       window.location.href = `/cookbook/${data.id}`;
-    } catch (err) {
+    } catch {
       // Network error
       toast.error("Couldn't save entry. Check your connection.");
     } finally {
@@ -161,7 +162,7 @@ export default function CookbookCreateView({ isAuthenticated }: CookbookCreateVi
           value={form}
           errors={errors}
           disabled={isSubmitting}
-          submitLabel={isSubmitting ? 'Saving...' : 'Save'}
+          submitLabel={isSubmitting ? "Saving..." : "Save"}
           onChange={handleChange}
           onSubmit={handleSubmit}
         />

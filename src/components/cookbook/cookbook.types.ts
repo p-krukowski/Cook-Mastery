@@ -5,18 +5,13 @@
  * as well as helper functions for data transformation and formatting.
  */
 
-import type {
-  CookbookEntryDTO,
-  ListCookbookEntriesResponseDTO,
-  ApiErrorResponse,
-  PaginationMeta,
-} from '@/types';
+import type { CookbookEntryDTO, ListCookbookEntriesResponseDTO, ApiErrorResponse, PaginationMeta } from "@/types";
 
 // ============================================================================
 // Sort Types
 // ============================================================================
 
-export type CookbookSort = 'newest' | 'oldest' | 'title_asc';
+export type CookbookSort = "newest" | "oldest" | "title_asc";
 
 // ============================================================================
 // List View Models
@@ -99,7 +94,7 @@ export interface CookbookEntryFormErrorsVM {
  * Edit state tracking for detail view
  */
 export interface CookbookEntryEditStateVM {
-  mode: 'view' | 'edit';
+  mode: "view" | "edit";
   isSaving: boolean;
   isDeleting: boolean;
   isDirty: boolean;
@@ -113,7 +108,7 @@ export interface CookbookEntryEditStateVM {
  * Error view model for list operations
  */
 export interface CookbookListErrorVM {
-  kind: 'http' | 'network';
+  kind: "http" | "network";
   status?: number;
   message: string;
   api?: ApiErrorResponse;
@@ -123,7 +118,7 @@ export interface CookbookListErrorVM {
  * Error view model for detail operations
  */
 export interface CookbookEntryErrorVM {
-  kind: 'http' | 'network';
+  kind: "http" | "network";
   status?: number;
   message: string;
   api?: ApiErrorResponse;
@@ -148,12 +143,12 @@ export function formatDateLabel(iso: string): string {
   try {
     const date = new Date(iso);
     return date.toLocaleDateString(undefined, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   } catch {
-    return 'Unknown date';
+    return "Unknown date";
   }
 }
 
@@ -162,17 +157,17 @@ export function formatDateLabel(iso: string): string {
  * and normalizing whitespace
  */
 export function makeNotesPreview(notes: string | null | undefined, maxLen = 140): string {
-  if (!notes) return '';
+  if (!notes) return "";
 
   // Normalize whitespace: collapse multiple spaces/newlines into single space
-  const normalized = notes.replace(/\s+/g, ' ').trim();
+  const normalized = notes.replace(/\s+/g, " ").trim();
 
   if (normalized.length <= maxLen) {
     return normalized;
   }
 
   // Truncate and add ellipsis
-  return normalized.slice(0, maxLen).trim() + '…';
+  return normalized.slice(0, maxLen).trim() + "…";
 }
 
 /**
@@ -185,7 +180,7 @@ export function formatUrlLabel(url: string): string {
   } catch {
     // If URL parsing fails, return truncated version
     if (url.length > 50) {
-      return url.slice(0, 47) + '...';
+      return url.slice(0, 47) + "...";
     }
     return url;
   }
@@ -197,7 +192,7 @@ export function formatUrlLabel(url: string): string {
 export function isValidUrl(value: string): boolean {
   try {
     const url = new URL(value);
-    return url.protocol === 'http:' || url.protocol === 'https:';
+    return url.protocol === "http:" || url.protocol === "https:";
   } catch {
     return false;
   }
@@ -237,7 +232,7 @@ export function toDetailVM(dto: CookbookEntryDTO): CookbookEntryDetailVM {
     id: dto.id,
     title: dto.title,
     url: dto.url,
-    notes: dto.notes ?? '',
+    notes: dto.notes ?? "",
     createdAtLabel: formatDateLabel(dto.created_at),
     updatedAtLabel: formatDateLabel(dto.updated_at),
   };
@@ -258,9 +253,9 @@ export function toListVM(dto: ListCookbookEntriesResponseDTO): CookbookListVM {
  */
 export function createEmptyForm(): CookbookEntryFormVM {
   return {
-    url: '',
-    title: '',
-    notes: '',
+    url: "",
+    title: "",
+    notes: "",
   };
 }
 

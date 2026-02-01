@@ -3,10 +3,10 @@
  * Handles UUID validation, not-found states, and error handling
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import type { GetCookbookEntryResponseDTO, ApiErrorResponse } from '@/types';
-import { isUuid, toDetailVM } from './cookbook.types';
-import type { CookbookEntryDetailVM, CookbookEntryErrorVM } from './cookbook.types';
+import { useState, useEffect, useCallback, useRef } from "react";
+import type { GetCookbookEntryResponseDTO, ApiErrorResponse } from "@/types";
+import { isUuid, toDetailVM } from "./cookbook.types";
+import type { CookbookEntryDetailVM, CookbookEntryErrorVM } from "./cookbook.types";
 
 interface UseCookbookEntryParams {
   entryId: string;
@@ -27,23 +27,21 @@ async function parseApiError(response: Response): Promise<CookbookEntryErrorVM> 
   try {
     const data = (await response.json()) as ApiErrorResponse;
     return {
-      kind: 'http',
+      kind: "http",
       status: response.status,
       message: data.error.message,
       api: data,
     };
   } catch {
     return {
-      kind: 'http',
+      kind: "http",
       status: response.status,
       message: `Request failed with status ${response.status}`,
     };
   }
 }
 
-export default function useCookbookEntry({
-  entryId,
-}: UseCookbookEntryParams): UseCookbookEntryResult {
+export default function useCookbookEntry({ entryId }: UseCookbookEntryParams): UseCookbookEntryResult {
   const [data, setData] = useState<CookbookEntryDetailVM | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<CookbookEntryErrorVM | null>(null);
@@ -83,7 +81,7 @@ export default function useCookbookEntry({
 
       // Handle 401 - session expired
       if (response.status === 401) {
-        window.location.href = '/login';
+        window.location.href = "/login";
         return;
       }
 
@@ -112,14 +110,14 @@ export default function useCookbookEntry({
       setIsNotFound(false);
     } catch (err) {
       // Handle abort and network errors
-      if (err instanceof Error && err.name === 'AbortError') {
+      if (err instanceof Error && err.name === "AbortError") {
         // Request was cancelled, ignore
         return;
       }
 
       // Network error
       setError({
-        kind: 'network',
+        kind: "network",
         message: "Couldn't load entry. Check your connection.",
       });
       setData(null);

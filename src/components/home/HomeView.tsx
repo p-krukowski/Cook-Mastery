@@ -27,15 +27,13 @@ export default function HomeView({ initialMode, selectedLevel }: HomeViewProps) 
   } = useHomeFeeds({ initialMode, selectedLevel });
 
   // Determine section titles and descriptions based on mode
-  const tutorialsSectionTitle =
-    mode === "authenticated" ? "Recommended Tutorials" : "Newest Tutorials";
+  const tutorialsSectionTitle = mode === "authenticated" ? "Recommended Tutorials" : "Newest Tutorials";
   const tutorialsSectionDescription =
     mode === "authenticated"
       ? `Tutorials matched to your ${selectedLevel?.toLowerCase() || ""} level`
       : "Latest practical and theoretical cooking tutorials";
 
-  const articlesSectionTitle =
-    mode === "authenticated" ? "Recommended Articles" : "Newest Articles";
+  const articlesSectionTitle = mode === "authenticated" ? "Recommended Articles" : "Newest Articles";
   const articlesSectionDescription =
     mode === "authenticated"
       ? `Articles matched to your ${selectedLevel?.toLowerCase() || ""} level`

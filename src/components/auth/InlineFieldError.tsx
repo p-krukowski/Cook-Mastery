@@ -1,9 +1,9 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import { cn } from "@/lib/utils";
 
 interface InlineFieldErrorProps {
-  error?: string
-  className?: string
+  error?: string;
+  className?: string;
 }
 
 /**
@@ -11,15 +11,11 @@ interface InlineFieldErrorProps {
  * Used to render ApiErrorResponse.error.details[field] when present
  */
 export function InlineFieldError({ error, className }: InlineFieldErrorProps) {
-  if (!error) return null
+  if (!error) return null;
 
   return (
-    <p
-      className={cn("text-sm text-destructive mt-1.5", className)}
-      role="alert"
-      aria-live="polite"
-    >
+    <p className={cn("text-sm text-destructive mt-1.5", className)} role="alert" aria-live="polite">
       {error}
     </p>
-  )
+  );
 }

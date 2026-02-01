@@ -2,8 +2,8 @@
  * CookbookEntryCard - Compact card for single cookbook entry in list view
  */
 
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import type { CookbookEntryListItemVM } from './cookbook.types';
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import type { CookbookEntryListItemVM } from "./cookbook.types";
 
 interface CookbookEntryCardProps {
   entry: CookbookEntryListItemVM;
@@ -47,9 +47,7 @@ export default function CookbookEntryCard({ entry }: CookbookEntryCardProps) {
           </div>
 
           {/* Notes preview */}
-          {entry.notesPreview && (
-            <p className="text-sm text-muted-foreground line-clamp-2">{entry.notesPreview}</p>
-          )}
+          {entry.notesPreview && <p className="text-sm text-muted-foreground line-clamp-2">{entry.notesPreview}</p>}
 
           {/* Created date */}
           <p className="text-xs text-muted-foreground">Added {entry.createdAtLabel}</p>

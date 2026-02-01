@@ -4,15 +4,15 @@
  * Displays user profile information and settings
  * Allows authenticated users to view their information and log out
  */
-import Layout from '../layouts/Layout.astro';
-import ProfileView from '../components/profile/ProfileView.tsx';
+import Layout from "../layouts/Layout.astro";
+import ProfileView from "../components/profile/ProfileView.tsx";
 
 // Get user and profile from middleware (guaranteed to exist due to auth protection)
 const { user, profile } = Astro.locals;
 
 // If no user or profile, this shouldn't happen due to middleware redirect
 if (!user || !profile) {
-  return Astro.redirect('/login');
+  return Astro.redirect("/login");
 }
 ---
 
