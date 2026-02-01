@@ -18,6 +18,20 @@ This guide explains how to deploy Cook Mastery to Cloudflare Pages using the aut
 4. Give your project a name (e.g., `cook-mastery`)
 5. Note your **Project Name** for later use
 
+### 1.1 Create KV Namespace for Sessions
+
+The Astro Cloudflare adapter requires a KV namespace for session storage:
+
+1. In Cloudflare Dashboard, go to **Workers & Pages** → **KV**
+2. Click **Create a namespace**
+3. Name it `cook-mastery-sessions` (or any name you prefer)
+4. Note the **Namespace ID** (you'll need it later)
+5. After creating your Pages project, go to **Settings** → **Functions** → **KV namespace bindings**
+6. Click **Add binding**:
+   - Variable name: `SESSION`
+   - KV namespace: Select the namespace you created
+7. Click **Save**
+
 ### 2. Get Cloudflare Credentials
 
 #### API Token
@@ -106,6 +120,40 @@ The build process uses the following environment variables:
 - `CLOUDFLARE_ENV` - Set to "1" to trigger Cloudflare adapter
 
 ## Troubleshooting
+
+### Missing Entry-Point Error
+
+If you see the error "Missing entry-point to Worker script or to assets directory":
+
+1. **Check KV Namespace Binding**: Ensure the `SESSION` KV namespace is properly bound to your Pages project
+   - Go to your Pages project → **Settings** → **Functions** → **KV namespace bindings**
+   - Verify the `SESSION` binding exists and points to your KV namespace
+
+2. **Verify Build Output**: The build should generate a `_worker.js` directory with an `index.js` file:
+   ```bash
+   dist/
+   ├── _worker.js/
+   │   ├── index.js
+   │   └── ... (other files)
+   ├── _routes.json
+   └── ... (static assets)
+   ```
+
+3. **Check Build Environment**: Ensure `CLOUDFLARE_ENV` is set to "1" during build:
+   ```bash
+   # This should be set in your GitHub Actions workflow
+   CLOUDFLARE_ENV: "1"
+   ```
+
+4. **Re-deploy**: Sometimes a fresh deployment resolves the issue:
+   ```bash
+   # Locally
+   rm -rf dist node_modules/.vite
+   CLOUDFLARE_ENV=1 npm run build
+   
+   # Or push to master to trigger CI/CD
+   git push origin master
+   ```
 
 ### Deployment Fails
 
