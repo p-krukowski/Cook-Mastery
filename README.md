@@ -17,15 +17,19 @@ Core product idea (MVP):
 
 **Table of contents**
 - [Tech stack](#tech-stack)
+- [Hosting platform analysis process](#hosting-platform-analysis-process)
+- [Hosting & deployment (Cloudflare)](#hosting--deployment-cloudflare)
 - [Getting started locally](#getting-started-locally)
 - [Available scripts](#available-scripts)
 - [Project scope](#project-scope)
 - [Project status](#project-status)
 - [License](#license)
 
+> **📦 Deployment Guide**: For detailed instructions on deploying to Cloudflare Pages, see [.github/CLOUDFLARE_DEPLOYMENT.md](.github/CLOUDFLARE_DEPLOYMENT.md)
+
 ## Tech stack
 
-- **Astro 5** (with Node adapter + sitemap)
+- **Astro 5** (static-first; Cloudflare Pages target; optional SSR via Workers) + sitemap
 - **TypeScript 5**
 - **React 19**
 - **Tailwind CSS 4**
@@ -39,6 +43,70 @@ Developer tooling:
 Testing:
 - Unit: **Vitest** (with Testing Library + jsdom)
 - E2E: **Playwright** (Chromium/Desktop Chrome)
+
+## Hosting platform analysis process
+
+This project started as a free side project, but may evolve into a commercial product. Hosting decisions are therefore evaluated using a repeatable process that tries to optimize for **low current cost** while avoiding **forced migrations** later.
+
+### 1) Identify the framework’s runtime model (drives hosting)
+- **Astro is static-first**, but can require a server runtime when you enable **SSR**, **API routes**, or other dynamic features.
+- This leads to two fundamentally different hosting shapes:
+  - **Static hosting** (serve build artifacts from a CDN; lowest ops + cost)
+  - **Server/edge compute hosting** (run SSR and endpoints; more constraints/cost)
+
+### 2) Define the required “environments” early
+Decide which of these must exist and be isolated:
+- **Production** (stable, monitored)
+- **Preview** (per-PR/per-branch)
+- **Staging** (long-lived, production-like; separate domain and secrets)
+
+Key question: can the platform do this cleanly without hacks like “one giant environment with manual toggles”?
+
+### 3) Check compatibility constraints (avoid hidden rewrites)
+For each candidate platform, explicitly test/confirm:
+- **Static deployment** support (straightforward for almost all platforms)
+- **SSR runtime compatibility**:
+  - **Full Node.js** runtimes (most compatible with the ecosystem)
+  - **Edge runtimes** (fast + cheap at scale, but not full Node; may break Node-only deps)
+- **Build pipeline constraints** (build timeouts, build concurrency, artifact limits)
+
+### 4) Evaluate the “commercialization cliff”
+Many platforms have a sharp transition from “hobby” to “commercial”:
+- **Commercial use restrictions** on free tiers (you may need to upgrade to monetize)
+- **Hard monthly caps** that can pause/limit service
+- **Team/seat pricing** that becomes the first real cost once you collaborate
+
+Concrete example of what we track: build limits, request limits for dynamic compute, and any “non-commercial only” clauses.
+
+### 5) Score for migration risk, not just today’s convenience
+We prefer platforms that keep options open:
+- Can we switch from **static → SSR** without rewriting the app?
+- Does the runtime choice (Node vs edge) force us into specific libraries/patterns?
+- Can we move later to containers if needed (Cloud Run/Fly/etc.) without redesigning everything?
+
+Current chosen target is documented in the next section.
+
+## Hosting & deployment (Cloudflare)
+
+This project is designed to deploy on **Cloudflare Pages**, using Astro’s static output by default.
+
+### Operational model
+- **Default (recommended)**: **Static site** deployed to **Cloudflare Pages** (cheap, simple, minimal runtime surface area).
+- **If/when needed**: **SSR / API routes** can run as **Cloudflare Pages Functions (Workers runtime)**. This generally requires switching the Astro build target to the Cloudflare adapter (`@astrojs/cloudflare`), because the Node SSR adapter is not a runtime match for Cloudflare.
+
+### Environments
+- **Production**: `main` (or `dev`, depending on repo flow) deploys to the production Pages project + custom domain.
+- **Preview**: Cloudflare Pages supports **unlimited preview deployments** per project for PRs/branches.
+- **Staging (optional, “startup-ready”)**: use a **separate Pages project** (separate domain + separate env vars/secrets) to avoid coupling staging to preview behavior.
+
+### Limits and pricing considerations (important for scale)
+- **Cloudflare Pages (Free plan)** limits include **500 builds/month**, **20-minute build timeout**, **20,000 files per site**, and **25 MiB max single asset**. Large assets should go to object storage (e.g., Cloudflare R2) and be served from a separate domain.
+- **Dynamic requests** (Pages Functions) are billed as **Cloudflare Workers**:
+  - Workers **Free**: **100,000 requests/day**
+  - Workers **Paid**: **$5/month minimum**, includes **10 million requests/month** (then **$0.30 per additional million**) and CPU-time-based billing.
+
+### Compatibility caveat (avoid surprises later)
+If you introduce server-side code, remember that **Workers are not full Node.js**. Node-only dependencies (filesystem access, some native modules, certain Node APIs) may not work without refactors or replacements.
 
 ## Getting started locally
 
