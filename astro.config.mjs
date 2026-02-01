@@ -16,6 +16,7 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   adapter:
+    // eslint-disable-next-line no-undef
     process.env.CF_PAGES === "1" || process.env.CLOUDFLARE_ENV
       ? cloudflare({
           platformProxy: {
